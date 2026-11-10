@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CT Inbound Dashboard</title>
+<title>Warehouse Control Tower</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -195,7 +195,7 @@ th.sortable:hover{color:var(--cyan)}
 .login-screen.hidden{display:none}
 .login-box{background:var(--bg3);border:1px solid var(--cyan2);border-radius:12px;padding:48px 56px;width:380px;max-width:92vw;box-shadow:0 0 60px rgba(0,245,255,0.15);position:relative;z-index:1}
 .login-brand{font-family:var(--sans);font-weight:700;font-size:10px;letter-spacing:6px;color:var(--cyan);text-align:center;margin-bottom:6px}
-.login-title{font-family:var(--sans);font-size:26px;font-weight:900;text-align:center;background:linear-gradient(135deg,#fff 30%,var(--cyan) 70%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.login-title{font-family:var(--sans);font-size:26px;font-weight:800;text-align:center;color:var(--text);margin-bottom:4px}
 .login-sub{font-size:10px;letter-spacing:3px;color:var(--text-dim);text-align:center;margin-bottom:32px}
 .login-field{margin-bottom:16px}
 .login-field label{display:block;font-size:10px;letter-spacing:2px;color:var(--cyan2);margin-bottom:6px;font-family:var(--sans);font-weight:600}
@@ -423,10 +423,7 @@ tbody td.ct-frozen{background:#fff!important}
 <div id="loginScreen" class="login-screen" style="display: none; z-index: 99999;">
   <div class="login-box">
     <div class="login-scan"></div>
-    <div class="login-logo">
-      <img src="logo.png" style="height: 50px; width: auto; margin: 0 auto; display: block;" alt="NVO Logo">
-    </div>
-    <div class="login-brand" style="margin-top: 10px;">NVO WAREHOUSE</div>
+    <div class="login-brand" style="margin-top: 4px;">WAREHOUSE</div>
     <div class="login-title">Control Tower</div>
     <div class="login-sub">ROLE-BASED ACCESS</div>
     
@@ -436,8 +433,8 @@ tbody td.ct-frozen{background:#fff!important}
         <option value="Admin">Administrator (All Access)</option>
         <option value="Operator">Warehouse Operator (VA & CT Entry)</option>
         <option value="Sales">Sales Representative (Sales & SOP)</option>
-        <option value="Customer_Swiss">Customer: Swiss Polymers</option>
-        <option value="Customer_Ceca">Customer: Ceca</option>
+        <option value="Customer_Summit">Customer: Summit Polymers</option>
+        <option value="Customer_Cerix">Customer: Cerix</option>
         <option value="Viewer">General Viewer (Read-only)</option>
       </select>
     </div>
@@ -447,7 +444,7 @@ tbody td.ct-frozen{background:#fff!important}
       <input type="password" id="loginPassword" value="admin123" placeholder="••••••••" style="width: 100%; height: 40px; background: var(--bg4); border: 1px solid var(--dim); color: var(--text); padding: 5px 10px; border-radius: 6px; font-family: var(--sans); font-size: 13px;" />
     </div>
     
-    <div class="login-error" id="loginError" style="color: var(--red); font-size: 11px; margin-top: 8px; display: none;">Invalid password (use 'admin123')</div>
+    <div class="login-error" id="loginError" style="color: var(--red); font-size: 11px; margin-top: 8px; display: none;">Invalid password</div>
     <button class="login-btn" onclick="doMockLogin()">Secure Login</button>
   </div>
 </div>
@@ -486,7 +483,7 @@ tbody td.ct-frozen{background:#fff!important}
       <div class="nav-item" id="navVAu12" onclick="switchTab('va-u12')">
         Warehouse Unit 1
       </div>
-      <div class="nav-item" id="navVASabic" onclick="switchTab('va-sabic')">
+      <div class="nav-item" id="navVAUnit2" onclick="switchTab('va-unit2')">
         Warehouse Unit 2
       </div>
     </div>
@@ -518,6 +515,7 @@ tbody td.ct-frozen{background:#fff!important}
       <button class="theme-btn" id="sbThemeBtn" onclick="toggleTheme()" title="Toggle day / night mode" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px; min-width: 32px; min-height: 32px; border: 1px solid var(--dim); border-radius: 5px; background: transparent; cursor: pointer; color: var(--text-dim);"></button>
     </div>
     <button class="logout-btn" onclick="doLogout()" style="width: 100%; text-align: center;">Logout</button>
+    <button onclick="resetDemoData()" style="width:100%;background:transparent;border:none;color:var(--text-dim);font-size:10px;cursor:pointer;font-family:var(--sans);text-decoration:underline">Reset demo data</button>
   </div>
 </aside>
 
@@ -530,7 +528,7 @@ tbody td.ct-frozen{background:#fff!important}
       <span></span><span></span><span></span>
     </button>
     <div>
-      <h1>Control Tower Dashboard</h1>
+      <h1>Warehouse Control Tower</h1>
       <div class="hdr-clock" id="hdrClock">—</div>
     </div>
   </div>
@@ -540,9 +538,6 @@ tbody td.ct-frozen{background:#fff!important}
       <div id="userBadgeWrap" style="display:none; align-items:center; gap:8px;">
         <span class="user-badge"><span class="user-dot"></span> <span id="ctUserName">Admin</span></span>
         <button class="logout-btn" onclick="doLogout()">Logout</button>
-      </div>
-      <div class="header-logo">
-        <img src="logo.png" style="height:38px;width:auto;display:block" alt="NVO Logo">
       </div>
       <!-- hidden file input kept for firebase import via sidebar -->
       <button style="display:none" onclick="document.getElementById('fileInput').click()">import</button>
@@ -1105,7 +1100,7 @@ tbody td.ct-frozen{background:#fff!important}
 
   <div class="ctrl-group" style="max-width:520px;margin-bottom:8px">
     <div class="ctrl-lbl">Ask</div>
-    <input type="text" id="sopAskInput" placeholder="e.g. what is Swiss Polymers customs requesting steps" onkeydown="if(event.key==='Enter')sopSmartAsk()" style="background:var(--bg3);border:1px solid var(--dim);color:var(--text);font-family:var(--sans);font-size:13px;padding:8px 12px;border-radius:6px;outline:none;width:100%">
+    <input type="text" id="sopAskInput" placeholder="e.g. what is Summit Polymers customs requesting steps" onkeydown="if(event.key==='Enter')sopSmartAsk()" style="background:var(--bg3);border:1px solid var(--dim);color:var(--text);font-family:var(--sans);font-size:13px;padding:8px 12px;border-radius:6px;outline:none;width:100%">
     <div id="sopAskMsg" style="font-size:11px;color:var(--text-dim);margin-top:5px"></div>
   </div>
 
@@ -1206,8 +1201,8 @@ tbody td.ct-frozen{background:#fff!important}
       <th rowspan="2" class="ct-gh ct-gh-status" style="min-width:130px">Remark</th>
       <!-- 9–11: References -->
       <th rowspan="2" class="ct-gh ct-gh-ref" style="min-width:80px">iTOS Nbr</th>
-      <th rowspan="2" class="ct-gh ct-gh-ref" style="min-width:106px">Sabic Ref (450)</th>
-      <th rowspan="2" class="ct-gh ct-gh-ref" style="min-width:106px">Sabic Ref (808)</th>
+      <th rowspan="2" class="ct-gh ct-gh-ref" style="min-width:106px">Solvane Ref (450)</th>
+      <th rowspan="2" class="ct-gh ct-gh-ref" style="min-width:106px">Solvane Ref (808)</th>
       <!-- 12–14: Transport -->
       <th rowspan="2" class="ct-gh ct-gh-tpt" style="min-width:88px">Tpt Booked As</th>
       <th rowspan="2" class="ct-gh ct-gh-tpt" style="min-width:88px">Transport By</th>
@@ -1348,8 +1343,8 @@ tbody td.ct-frozen{background:#fff!important}
       <td><input type="text" class="ct-inp" id="s_remark" placeholder="—"></td>
       <!-- 9–11: References -->
       <td><input type="text" class="ct-inp" id="s_itosNbr" placeholder="—"></td>
-      <td><input type="text" class="ct-inp" id="s_sabicRef450" placeholder="—"></td>
-      <td><input type="text" class="ct-inp" id="s_sabicRef808" placeholder="—"></td>
+      <td><input type="text" class="ct-inp" id="s_solvaneRef450" placeholder="—"></td>
+      <td><input type="text" class="ct-inp" id="s_solvaneRef808" placeholder="—"></td>
       <!-- 12–14: Transport -->
       <td><input type="text" class="ct-inp" id="s_tptBookedAs" placeholder="—"></td>
       <td><input type="text" class="ct-inp" id="s_tptBy" placeholder="—"></td>
@@ -1695,199 +1690,447 @@ tbody td.ct-frozen{background:#fff!important}
 
 
 
-  // Helper to get or set localStorage database tables
-  function getTable(name, defaultData) {
-    if (!localStorage.getItem('mock_' + name)) {
-      localStorage.setItem('mock_' + name, JSON.stringify(defaultData));
+  // =====================================================================
+  // DEMO DATA LAYER
+  // Records are generated deterministically (seeded) week by week from
+  // 5 Jan 2026 up to today, plus three weeks of announced arrivals.
+  // Each record keeps the same identity on every load; only its progress
+  // (ATA, customs, pick-up, empty return, status) moves forward with the
+  // calendar. User edits are stored as small patches in localStorage.
+  // =====================================================================
+  const DEMO_VERSION = 'wct-demo-3';
+  try {
+    if (localStorage.getItem('demo_version') !== DEMO_VERSION) {
+      Object.keys(localStorage).forEach(function(k){
+        if (/^(mock_|demo_)/.test(k) || k === 'ct_inbound_cache' || k === 'ct_outbound_cache') localStorage.removeItem(k);
+      });
+      localStorage.setItem('demo_version', DEMO_VERSION);
     }
-    return JSON.parse(localStorage.getItem('mock_' + name));
+  } catch (e) {}
+
+  const DAY = 86400000;
+  const _now = new Date();
+  const TODAY = Date.UTC(_now.getFullYear(), _now.getMonth(), _now.getDate());
+  const START = Date.UTC(2026, 0, 5);           // Monday, ISO week 2 of 2026
+  const HORIZON = TODAY + 21 * DAY;              // announced arrivals / planned loadings
+  const iso = t => (t == null || t === '') ? '' : new Date(t).toISOString().slice(0, 10);
+  const past = t => t !== '' && t != null && t <= TODAY;
+
+  function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function rngFor(){ let h = 2166136261; for (const a of arguments) { const s = String(a); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } } return mulberry32(h >>> 0); }
+  const pick = (r, arr) => arr[Math.floor(r() * arr.length)];
+  const between = (r, lo, hi) => lo + Math.floor(r() * (hi - lo + 1));
+  function wpick(r, pairs){ let tot = 0; pairs.forEach(p => tot += p[1]); let x = r() * tot; for (const p of pairs) { if ((x -= p[1]) < 0) return p[0]; } return pairs[pairs.length - 1][0]; }
+  const digits = (r, n) => { let s = ''; for (let i = 0; i < n; i++) s += Math.floor(r() * 10); return s; };
+  function isoWeek(t){ const d = new Date(t); const day = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - day); const y = Date.UTC(d.getUTCFullYear(), 0, 1); return Math.ceil(((d - y) / DAY + 1) / 7); }
+  const WEEKDAY = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  // ISO 6346 container number with a valid check digit
+  function containerNo(owner, r){
+    const serial = digits(r, 6), code = owner + serial;
+    const val = c => { if (/\d/.test(c)) return +c; let v = 10 + c.charCodeAt(0) - 65; return v + Math.floor((v - 1) / 10); };
+    let sum = 0; for (let i = 0; i < 10; i++) sum += val(code[i]) * Math.pow(2, i);
+    return code + ((sum % 11) % 10);
   }
 
-  function saveTable(name, data) {
-    localStorage.setItem('mock_' + name, JSON.stringify(data));
-  }
+  const LINES = [
+    { name: 'MSC',         w: 26, bl: 'MEDU', owners: ['MSCU','MEDU','TGHU'], vessels: ['MSC AURORA','MSC CELESTE','MSC VALENTINA','MSC MARINA','MSC ARIANE','MSC ELODIE'] },
+    { name: 'Maersk',      w: 20, bl: 'MAEU', owners: ['MSKU','MRKU','MRSU'], vessels: ['MAERSK EDIRNE','MAERSK HALIFAX','MAERSK SALTORO','MAERSK KOWLOON','MAERSK LIMA'] },
+    { name: 'CMA CGM',     w: 14, bl: 'CMDU', owners: ['CMAU','TCLU'],        vessels: ['CMA CGM RHONE','CMA CGM SEINE','CMA CGM TAGE','CMA CGM LOIRE'] },
+    { name: 'Hapag-Lloyd', w: 13, bl: 'HLCU', owners: ['HLXU','HLBU'],        vessels: ['ELBE EXPRESS','RHEIN EXPRESS','WESER EXPRESS','MAIN EXPRESS'] },
+    { name: 'ONE',         w: 8,  bl: 'ONEY', owners: ['ONEU','TCNU'],        vessels: ['ONE HARMONY','ONE FIDELITY','ONE MAJESTY'] },
+    { name: 'COSCO',       w: 7,  bl: 'COSU', owners: ['CSNU','CCLU'],        vessels: ['COSCO ORCHID','COSCO JASMINE','COSCO LOTUS'] },
+    { name: 'Evergreen',   w: 6,  bl: 'EGLV', owners: ['EGHU','EMCU'],        vessels: ['EVER GALAXY','EVER GRACE','EVER LUNAR'] },
+    { name: 'HMM',         w: 3,  bl: 'HDMU', owners: ['HMMU'],               vessels: ['HMM GARNET','HMM TOPAZ'] },
+    { name: 'Yang Ming',   w: 2,  bl: 'YMLU', owners: ['YMMU'],               vessels: ['YM WELLSPRING','YM HARMONIA'] },
+    { name: 'OOCL',        w: 1,  bl: 'OOLU', owners: ['OOLU'],               vessels: ['OOCL PIRAEUS','OOCL ROTTERDAM'] }
+  ];
+  const ACTIVE_REMARKS = [
+    'Awaiting customs release', 'Pincode not yet received from terminal', 'THC unpaid - chased shipping line',
+    'Docs incomplete: packing list missing', 'Physical inspection requested by customs', 'Vessel delayed - berth congestion',
+    'Pick-up booked, waiting slot confirmation', 'Client asked to hold delivery', 'Overweight - special trailer requested',
+    'Scanning selected by customs', 'Original BL not surrendered yet', 'Awaiting delivery order'
+  ];
+  const DONE_REMARKS = ['', '', '', '', 'Delivered on time', 'Unloaded, stock booked in WMS', 'Damaged bag reported on arrival - photos filed', 'Partial delivery, balance next day'];
 
-  // --- 1. MOCK DATA DEFINITIONS ---
-  const MOCK_INBOUND = [];
-  const clients = ["Swiss Polymers", "Ceca", "Vinmar", "Yusen", "Hanwha Total", "DL Chemicals"];
-  const warehouses = ["NNRC - KAAI 660", "Oudendijk - Kaai 1994", "Kalishoek - Kaai 1793", "Brasil - Kaai 1054"];
-  const statusOptions = ["Active", "Completed", "Finished", "Cancelled"];
-  const shippingLines = ["MSC", "Maersk", "Hapag-Lloyd", "ONE", "CMA CGM"];
-  const vessels = ["MSC AMSTERDAM", "MAERSK MC-KINNEY MOLLER", "HAPAG TOKYO", "ONE INTEGRITY"];
-
-  for (let i = 1; i <= 150; i++) {
-    const isOk = i % 5 !== 0;
-    MOCK_INBOUND.push({
-      id: i,
-      ContainerNbr: "MSCU" + String(1000000 + i),
-      ItosBoltrics: "ITOS-" + String(500000 + i),
-      ClientRef: "REF-" + String(800000 + i),
-      BlNbr: "MEDU" + String(300000 + i),
-      Client: clients[i % clients.length],
-      Warehouse: warehouses[i % warehouses.length],
-      ShippingLine: shippingLines[i % shippingLines.length],
-      Vessel: vessels[i % vessels.length],
-      Fnr: "F" + String(100000 + i),
-      InputTms: "TMS-" + String(700000 + i),
-      DateDocReceived: isOk ? "2026-08-" + String(10 + (i % 15)).padStart(2, '0') : "",
-      Remarks: i % 10 === 0 ? "Urgent clearance required" : "Standard shipment",
-      OperationalRemarks: i % 15 === 0 ? "Awaiting customs documents" : "",
-      Status: statusOptions[i % statusOptions.length],
-      ETA: "2026-08-" + String(1 + (i % 15)).padStart(2, '0'),
-      ATA: "2026-08-" + String(2 + (i % 15)).padStart(2, '0'),
-      DateReceived: "2026-08-" + String(3 + (i % 15)).padStart(2, '0'),
-      DateCreated: "2026-08-01",
-      T1Date: "2026-08-" + String(4 + (i % 15)).padStart(2, '0'),
-      CustomsDate: "2026-08-" + String(5 + (i % 15)).padStart(2, '0'),
-      PincodeDate: "2026-08-" + String(6 + (i % 15)).padStart(2, '0'),
-      TmsDate: "2026-08-" + String(6 + (i % 15)).padStart(2, '0'),
-      ReadyPickupDate: "2026-08-" + String(7 + (i % 15)).padStart(2, '0'),
-      EmptyDate: "2026-08-" + String(8 + (i % 15)).padStart(2, '0'),
-      Docs: isOk ? "OK" : "NOK",
-      TMS: "OK"
+  // Warehouse weights (higher = more volume). Taken from the warehouse -> client configuration.
+  const WH_WEIGHT = {
+    'Central - Quay 660': 14, 'Northpoint - Quay 1793': 12, 'Riverside - Quay 1054': 10, 'Westdyke - Quay 1994': 8,
+    'Greenfield': 8, 'Bluegate': 7, 'Harbourside 650': 6, 'Portside - Quay 1143': 5, 'Southfarm': 5,
+    'Cleaning - Quay 1054': 4, 'Eastfield': 4, 'Hazmat - Quay 1167': 3, 'Portside - Quay 1147': 3, 'Depot 650': 2,
+    'Filling 1054': 1, 'Forwarding': 3
+  };
+  function whClientPairs(){
+    const pairs = [];
+    Object.keys(WH_CLIENT_MAP).forEach(function(wh){
+      const cls = WH_CLIENT_MAP[wh] || [];
+      if (wh === 'VMF' || !cls.length) return;
+      const w = WH_WEIGHT[wh] || 2;
+      const boost = { 'Summit Polymers': 5, 'Cerix': 3 };
+      cls.forEach(function(c){ pairs.push([{ wh: wh, client: c }, w / cls.length * (boost[c] || 1)]); });
     });
+    return pairs;
   }
 
-  const MOCK_OUTBOUND = [];
-  for (let i = 1; i <= 100; i++) {
-    MOCK_OUTBOUND.push({
-      id: 500 + i,
-      warehouse: warehouses[i % warehouses.length],
-      client: clients[i % clients.length],
-      client_ref: "OUTREF-" + String(900000 + i),
-      loading_date: "2026-08-" + String(12 + (i % 14)).padStart(2, '0'),
-      eld: "2026-08-" + String(13 + (i % 14)).padStart(2, '0'),
-      itos_creation: "2026-08-" + String(14 + (i % 14)).padStart(2, '0'),
-      loading_slip_sent: "2026-08-" + String(14 + (i % 14)).padStart(2, '0'),
-      customs_req: "2026-08-" + String(15 + (i % 14)).padStart(2, '0'),
-      customs_rec: "2026-08-" + String(15 + (i % 14)).padStart(2, '0'),
-      loading_slip_check: "OK",
-      dn_packlist: "Received",
-      labels: "Printed",
-      ekotec: "NA",
-      status: i % 8 === 0 ? "Finished" : i % 12 === 0 ? "Cancelled" : "Active",
-      remarks: "Sample Outbound " + i,
-      mode_of_transport: i % 3 === 0 ? "Truck" : "Container",
-      destination_code: "DE",
-      company_destination: "Company Destination XYZ",
-      eu_non_eu: "EU",
-      net_weight: 15000 + (i * 100),
-      order_created_at: "2026-08-01",
-      type_of_customs: "IMAJ",
-      amount_of_colli: 12 + i,
-      license_plates: "AA-999-BB",
-      outbound_customs_doc_nbr: "DOC-" + String(600000 + i)
-    });
-  }
-
-  const MOCK_SALES_DD = [];
-  const costCategories = ["Shipping Line", "Transport", "Warehouse", "ACS", "Internal Customs", "Customer"];
-  for (let i = 1; i <= 60; i++) {
-    MOCK_SALES_DD.push({
-      id: 2000 + i,
-      container_nbr: "MSCU" + String(700000 + i),
-      klant: clients[i % clients.length],
-      cost_amount: 150 + (i * 25),
-      costs_for: costCategories[i % costCategories.length],
-      client_ref: "CREF-" + i,
-      bl_number: "BL-" + String(44000 + i),
-      invoice_number: "INV-2026-" + String(100 + i),
-      entity: "NVO NV",
-      year: 2026,
-      month: 1 + (i % 8),
-      status: i % 6 === 0 ? "Outstanding" : "Paid",
-      shipping_line: shippingLines[i % shippingLines.length],
-      type_costs: "Demurrage",
-      ata: "2026-08-01T12:00:00Z",
-      storage: 50,
-      demurrage: 100 + (i * 10),
-      detention: 0,
-      aantal_dagen: 5 + (i % 10),
-      warehouse: warehouses[i % warehouses.length],
-      uitgaande_factuurnr: "OUTINV-" + (3000 + i),
-      uitgaande_factuur_datum: "2026-08-20"
-    });
-  }
-
-  const MOCK_SOP = {
-    id: 1,
-    docId: "14ma272b38MrAZclmbQ4q7STC6vjBunJ5SfD1m-Y0XZ0",
-    warehouse: "NNRC - KAAI 660",
-    client: "Swiss Polymers",
-    tasks: [
-      {
-        id: 10,
-        title: "Inbound Standard Reception",
-        steps: [
-          { id: 101, title: "Pre-alert and document check", html: "<p>Check container pre-alerts in the ITOS portal. Verify the commercial invoice and packing list.</p>" },
-          { id: 102, title: "Customs declaration", html: "<p>Create customs entry type IMAJ. Ensure T1 document is scanned and uploaded.</p>" }
-        ]
-      },
-      {
-        id: 11,
-        title: "Outbound Loading Flow",
-        steps: [
-          { id: 111, title: "Prepare loading slips", html: "<p>Print loading slips and verify warehouse storage locations.</p>" },
-          { id: 112, title: "Check seals and container status", html: "<p>Confirm container seals match documents. Record license plates and seal numbers.</p>" }
-        ]
+  // ---------- INBOUND (containers, trucks and VMF forwarding files) ----------
+  function genInbound(){
+    const rows = [], pairs = whClientPairs();
+    let id = 1;
+    for (let wk = START, wi = 0; wk <= HORIZON; wk += 7 * DAY, wi++) {
+      const rw = rngFor('inb-week', wi);
+      const season = 1 + 0.18 * Math.sin((wi / 52) * 2 * Math.PI + 1.2);
+      const nShip = Math.round(between(rw, 15, 22) * season);
+      for (let s = 0; s < nShip; s++) {
+        const r = rngFor('inb', wi, s);
+        const pr = wpick(r, pairs);
+        const isTruck = r() < 0.16;
+        const line = wpick(r, LINES.map(l => [l, l.w]));
+        const eta = wk + between(r, 0, 6) * DAY;
+        if (eta > HORIZON) continue;
+        const slip = wpick(r, [[0, 58], [1, 24], [2, 10], [3, 5], [5, 3]]);
+        const ataT = eta + slip * DAY;
+        const ata = past(ataT) ? ataT : '';
+        const cancelled = r() < 0.018;
+        const external = r() < 0.08;
+        const nCont = isTruck ? 1 : wpick(r, [[1, 44], [2, 24], [3, 15], [4, 10], [5, 4], [6, 3]]);
+        const ctype = wpick(r, [['40HC', 52], ['20DV', 30], ['40DV', 18]]);
+        const docT = eta - between(r, 1, 7) * DAY;
+        const docsMissing = r() < 0.07 && !past(eta + 3 * DAY);
+        const docRcv = (!docsMissing && past(docT)) ? docT : '';
+        const blNbr = isTruck ? '' : line.bl + digits(r, 9);
+        const clientRef = (r() < 0.5 ? '45' + digits(r, 8) : 'PO-' + digits(r, 6));
+        const fnr = docRcv ? 'F26' + digits(r, 5) : '';
+        const inputTms = docRcv && r() < 0.93 ? 'TO' + digits(r, 7) : '';
+        const vessel = isTruck ? '' : pick(r, line.vessels);
+        const itos = 'B' + String(26000000 + id * 7 + between(r, 0, 6));
+        for (let c = 0; c < nCont; c++) {
+          const rc = rngFor('inb-c', wi, s, c);
+          const pickupT = ata ? ata + between(rc, 1, 4) * DAY : '';
+          const volAf = past(pickupT) && (rc() < 0.82 || pickupT < TODAY - 6 * DAY) ? pickupT : '';
+          const emptyT = volAf ? volAf + between(rc, 1, 5) * DAY : '';
+          const leegIn = past(emptyT) ? emptyT : '';
+          const custRec = ata && past(ata + DAY) && rc() < 0.96 ? 'OK' : (ata ? 'NOK' : '-');
+          let status = 'Active';
+          if (cancelled) status = 'Cancelled';
+          else if (leegIn) status = 'Finished';
+          else if (volAf) status = 'Completed';
+          const isActive = status === 'Active';
+          const rec = {
+            id: id++,
+            Warehouse: pr.wh, Client: pr.client,
+            ItosBoltrics: itos, ClientRef: clientRef, BlNbr: blNbr,
+            ETA: iso(eta), Delay: iso(eta + DAY), ATA: iso(ata),
+            Week: isoWeek(ata || eta + DAY),
+            Vessel: vessel, ShippingLine: isTruck ? '' : line.name,
+            Containers: nCont, ContainerType: isTruck ? 'Trailer' : ctype,
+            ContainerNbr: isTruck ? '' : containerNo(pick(rc, line.owners), rc),
+            DateDocReceived: iso(docRcv),
+            Docs: docRcv ? 'OK' : 'NOK',
+            HSCode: docRcv ? 'OK' : '-',
+            AN: past(eta - 2 * DAY) ? 'OK' : '-',
+            THC: ata ? (rc() < 0.93 || !isActive ? 'OK' : 'NOK') : '-',
+            POP: ata ? (rc() < 0.95 || !isActive ? 'OK' : 'NOK') : '-',
+            CustomsReq: docRcv ? 'OK' : 'NOK',
+            CustomsRec: custRec,
+            Release: custRec === 'OK' ? 'OK' : (ata ? 'NOK' : '-'),
+            TMS: 'OK', Fnr: fnr, InputTms: inputTms,
+            Status: status,
+            TransportBy: external ? 'External' : 'Internal',
+            HasTms: !isTruck,
+            ModeOfTransport: isTruck ? 'Truck' : 'Container',
+            DepotIn: '', CpuUntil: ata ? iso(ata + between(rc, 2, 5) * DAY) : '',
+            VolAf: iso(volAf), LeegIn: iso(leegIn),
+            DeliveryWH: isTruck ? iso(ata) : '',
+            ItosCreated: isTruck && docRcv ? iso(docRcv) : '',
+            DsSent: isTruck && ata ? iso(ata) : '',
+            ScannedDs: isTruck && volAf ? iso(volAf) : '',
+            Cofano: isTruck ? r() < 0.5 : false,
+            Remarks: isActive ? (rc() < 0.45 ? pick(rc, ACTIVE_REMARKS) : '') : pick(rc, DONE_REMARKS),
+            OperationalRemarks: isActive && rc() < 0.3 ? pick(rc, ACTIVE_REMARKS) : '',
+            AIRemark: ''
+          };
+          if (cancelled) rec.Remarks = 'Cancelled by client - goods rerouted';
+          rows.push(rec);
+        }
       }
-    ]
+      // VMF forwarding files (FCL / LCL)
+      const nVmf = between(rw, 5, 9);
+      const vmfClients = (WH_CLIENT_MAP['Forwarding'] || []).concat(['Trinasun', 'Sumira', 'Lanvex']);
+      for (let s = 0; s < nVmf; s++) {
+        const r = rngFor('vmf', wi, s);
+        const line = wpick(r, LINES.map(l => [l, l.w]));
+        const fcl = r() < 0.7;
+        const eta = wk + between(r, 0, 6) * DAY;
+        if (eta > HORIZON) continue;
+        const ata = past(eta + DAY) ? eta + DAY : '';
+        const volAf = ata && past(ata + 2 * DAY) ? ata + 2 * DAY : '';
+        const leegIn = volAf && past(volAf + 3 * DAY) ? volAf + 3 * DAY : '';
+        const op = pick(r, OPERATOR_CODES);
+        rows.push({
+          id: id++, Warehouse: 'VMF', Client: pick(r, vmfClients),
+          ItosBoltrics: '2026' + op + '0' + digits(r, 3), ClientRef: 'FWD-' + digits(r, 5), BlNbr: line.bl + digits(r, 9),
+          ETA: iso(eta), Delay: iso(eta + DAY), ATA: iso(ata), Week: isoWeek(ata || eta + DAY),
+          Vessel: pick(r, line.vessels), ShippingLine: line.name,
+          Containers: fcl ? between(r, 1, 5) : 0, ContainerType: fcl ? '40HC' : 'LCL',
+          ContainerNbr: fcl ? containerNo(pick(r, line.owners), r) : '',
+          DateDocReceived: iso(past(eta - 3 * DAY) ? eta - 3 * DAY : ''), Docs: past(eta - 3 * DAY) ? 'OK' : 'NOK',
+          HSCode: 'OK', AN: past(eta - 2 * DAY) ? 'OK' : '-', THC: ata ? 'OK' : '-', POP: ata ? 'OK' : '-',
+          CustomsReq: past(eta - 3 * DAY) ? 'OK' : 'NOK', CustomsRec: ata ? 'OK' : '-', Release: ata ? 'OK' : '-',
+          TMS: 'OK', Fnr: 'F26' + digits(r, 5), InputTms: 'TO' + digits(r, 7),
+          Status: leegIn ? 'Finished' : volAf ? 'Completed' : 'Active', TransportBy: 'Internal', HasTms: true,
+          ModeOfTransport: fcl ? 'FCL' : 'LCL', DeliveryOrderDate: fcl ? '' : iso(ata),
+          VolAf: iso(volAf), LeegIn: iso(leegIn), CpuUntil: ata ? iso(ata + 5 * DAY) : '',
+          Remarks: '', OperationalRemarks: '', AIRemark: ''
+        });
+      }
+    }
+    return rows;
+  }
+
+  // ---------- OUTBOUND ----------
+  const DESTS = [['DE', 'EU', 'Rhein Kunststoffwerk GmbH'], ['FR', 'EU', 'Plastiques du Nord SAS'], ['NL', 'EU', 'Maasvlakte Compounding BV'],
+    ['PL', 'EU', 'Polfoil Sp. z o.o.'], ['IT', 'EU', 'Lombarda Imballaggi S.p.A.'], ['ES', 'EU', 'Envases Levante S.L.'],
+    ['CZ', 'EU', 'Morava Film s.r.o.'], ['US', 'NON-EU', 'Gulf Coast Polymers Inc.'], ['TR', 'NON-EU', 'Anadolu Ambalaj A.S.'],
+    ['GB', 'NON-EU', 'Midlands Moulding Ltd'], ['IN', 'NON-EU', 'Western Packaging Pvt Ltd'], ['MA', 'NON-EU', 'Atlas Emballage SARL']];
+  function genOutbound(){
+    const rows = [], combos = [];
+    Object.keys(CLIENT_SHEET_MAP_OUTBOUND).forEach(function(wh){
+      const m = CLIENT_SHEET_MAP_OUTBOUND[wh];
+      Object.keys(m).forEach(function(disp){ combos.push([{ wh: wh, key: m[disp] }, /Forwarder/.test(m[disp]) ? 0.3 : 1]); });
+    });
+    let id = 50001;
+    for (let wk = START, wi = 0; wk <= TODAY + 14 * DAY; wk += 7 * DAY, wi++) {
+      const n = between(rngFor('ob-week', wi), 12, 18);
+      for (let s = 0; s < n; s++) {
+        const r = rngFor('ob', wi, s);
+        const c = wpick(r, combos);
+        const load = wk + between(r, 0, 4) * DAY;
+        const dest = pick(r, DESTS);
+        const truck = r() < 0.55;
+        const done = past(load);
+        const cancelled = r() < 0.03;
+        const nonEu = dest[1] === 'NON-EU';
+        const lsSent = past(load - DAY) ? iso(load - DAY) : '';
+        rows.push({
+          id: id++, warehouse: c.wh, client: c.key,
+          client_ref: 'SO-' + digits(r, 7),
+          loading_date: iso(load), eld: iso(load - between(r, 0, 1) * DAY),
+          itos_creation: done && !cancelled ? iso(load) : '',
+          loading_slip_sent: lsSent,
+          customs_req: past(load - 2 * DAY) ? iso(load - 2 * DAY) : '',
+          customs_rec: nonEu ? (past(load - DAY) ? iso(load - DAY) : '') : 'NA',
+          loading_slip_check: lsSent ? 'OK' : 'NOK', dn_packlist: lsSent ? 'OK' : 'NOK', labels: lsSent ? 'OK' : 'NOK', ekotec: 'NA',
+          status: cancelled ? 'Cancelled' : (done && past(load + DAY) ? 'Finished' : 'Active'),
+          remarks: cancelled ? 'Order cancelled by client' : (!done && r() < 0.3 ? pick(r, ['Waiting for booking confirmation', 'Truck slot 08:00-10:00', 'Customs docs requested', 'Labels to be printed', 'Seal number pending']) : ''),
+          mode_of_transport: truck ? 'Truck' : 'Container',
+          destination_code: dest[0], company_destination: dest[2], eu_non_eu: dest[1],
+          net_weight: between(r, 12, 25) * 1000, order_created_at: iso(load - between(r, 3, 10) * DAY),
+          type_of_customs: nonEu ? 'EX-A' : 'T2L', amount_of_colli: truck ? between(r, 18, 26) : between(r, 16, 22),
+          license_plates: truck ? (r() < 0.5 ? '1-' + String.fromCharCode(65 + between(r, 0, 25), 65 + between(r, 0, 25), 65 + between(r, 0, 25)) + '-' + digits(r, 3) : 'NL-' + digits(r, 2) + '-BX-' + digits(r, 1)) : '',
+          outbound_customs_doc_nbr: nonEu && done ? '26BE' + digits(r, 14) : ''
+        });
+      }
+    }
+    return rows;
+  }
+
+  // ---------- DEMURRAGE / DETENTION (live container tracker) ----------
+  // The Dem & Det tracker mirrors the source sheet, which stores dates as "D-Mon" text
+  const DDMON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dm = v => { if (v === '' || v == null) return ''; const d = new Date(typeof v === 'number' ? v : Date.parse(v)); return d.getUTCDate() + '-' + DDMON[d.getUTCMonth()]; };
+  function genDemDet(inb){
+    return inb.filter(r => r.HasTms && r.Warehouse !== 'VMF' && r.ContainerNbr && r.ATA && Date.parse(r.ATA) >= TODAY - 45 * DAY)
+      .map(function(r){
+        const rr = rngFor('dd', r.id);
+        const ata = Date.parse(r.ATA);
+        const free = between(rr, 5, 10);
+        const pinUntil = ata + free * DAY;
+        const volAf = r.VolAf ? Date.parse(r.VolAf) : '';
+        const leegKlaar = volAf && past(volAf + DAY) ? volAf + DAY : '';
+        const closing = (volAf || pinUntil) + between(rr, 1, 4) * DAY;
+        const cpu = Date.parse(r.CpuUntil);
+        const demDays = Math.max(0, Math.round(((volAf || TODAY) - cpu) / DAY));
+        const detDays = volAf ? Math.max(0, Math.round(((r.LeegIn ? Date.parse(r.LeegIn) : TODAY) - volAf) / DAY) - 4) : 0;
+        return {
+          Warehouse: r.Warehouse, Client: r.Client, 'Shipping Line': r.ShippingLine, 'Vessel Name': r.Vessel,
+          Containers: r.ContainerNbr, ItosBoltrics: r.ItosBoltrics, 'B/L': r.BlNbr,
+          ETA: dm(r.ETA), 'ATA Ship': dm(r.ATA), 'Weekday ATA': WEEKDAY[new Date(ata).getUTCDay()],
+          'F. No.:': r.Fnr || 'NA', 'TMS Order No.': r.InputTms || '', 'INPUT TMS NO': r.InputTms || '',
+          'Date Docs Rcv': dm(r.DateDocReceived), 'Customs Rec': r.CustomsRec === 'OK' ? 'OK' : 'Pending',
+          'Pincode Received': r.CustomsRec === 'OK' ? dm(ata + DAY) : '', 'Pincode Until': dm(pinUntil),
+          'Pick up until': dm(r.CpuUntil), 'Pick up quay': 'Quay ' + pick(rr, ['913', '869', '1742', '1700']),
+          Closing: dm(closing),
+          'VOL CREA': r.InputTms && (r.VolAf || rr() < 0.7) ? dm(ata) : '', 'VOL AF': dm(r.VolAf), 'Leeg klaar': dm(leegKlaar), 'Leeg in': dm(r.LeegIn),
+          'Empty Return quay': 'Depot ' + pick(rr, ['Noord', 'Zuid', 'Oost']),
+          Storage: demDays > 0 ? demDays * 35 : 0, DEM: demDays * 95, DET: detDays * 70, DemDays: demDays, DetDays: detDays,
+          Status: r.Status, TransportBy: r.TransportBy, virtual_stock: ''
+        };
+      });
+  }
+  function genDemDetDays(inb){
+    return inb.filter(r => r.InputTms).slice(-600).map(r => ({ input_tms: r.InputTms, dem_days: 7, det_days: 5 }));
+  }
+  function genDdChanges(dd){
+    const out = [], r = rngFor('ddchg', TODAY);
+    const steps = [['ACTIVE', 'VOL CREA'], ['VOL CREA', 'VOL AF'], ['VOL AF', 'LEEG KLAAR'], ['LEEG KLAAR', 'LEEG IN']];
+    dd.slice(-60).forEach(function(d, i){
+      if (r() > 0.45) return;
+      const st = pick(r, steps), hh = between(r, 6, 17), mm = between(r, 0, 59);
+      out.push({ warehouse: d.Warehouse, client: d.Client, container_nbr: d.Containers, fnr: d['F. No.:'], input_tms: d['TMS Order No.'],
+        from_val: st[0], to_val: st[1], changed_date: iso(TODAY) + 'T' + String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0') + ':00',
+        changed_time: String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0') });
+    });
+    return out;
+  }
+
+  // ---------- SALES: DEMURRAGE / DETENTION INVOICES ----------
+  function genSalesDD(inb){
+    const rows = [], costsFor = [['Customer', 40], ['Shipping Line', 18], ['Transport', 14], ['Warehouse', 12], ['Internal Customs', 8], ['ACS', 8]];
+    const pool = inb.filter(r => r.HasTms && r.ContainerNbr && r.ATA && r.Warehouse !== 'VMF');
+    let id = 9001;
+    pool.forEach(function(r){
+      const rr = rngFor('sdd', r.id);
+      if (rr() > 0.16) return;
+      const ata = Date.parse(r.ATA);
+      const inv = ata + between(rr, 12, 30) * DAY;
+      if (!past(inv)) return;
+      const days = between(rr, 2, 14);
+      const dem = rr() < 0.75 ? days * between(rr, 75, 120) : 0;
+      const det = rr() < 0.45 ? between(rr, 1, 8) * between(rr, 55, 90) : 0;
+      const sto = rr() < 0.35 ? days * between(rr, 20, 40) : 0;
+      const amount = dem + det + sto || 150;
+      const d = new Date(inv);
+      const ageDays = (TODAY - inv) / DAY;
+      rows.push({
+        id: id++, container_nbr: r.ContainerNbr, klant: r.Client, cost_amount: amount,
+        costs_for: wpick(rr, costsFor), client_ref: r.ClientRef, bl_number: r.BlNbr,
+        invoice_number: 'SI-26-' + String(id).padStart(5, '0'),
+        entity: rr() < 0.72 ? 'Harbour Logistics NV' : 'Harbour Forwarding BV',
+        year: d.getUTCFullYear(), month: d.getUTCMonth() + 1,
+        status: ageDays > 45 ? (rr() < 0.94 ? 'Paid' : 'Disputed') : (ageDays > 20 ? (rr() < 0.6 ? 'Paid' : 'Outstanding') : 'Outstanding'),
+        shipping_line: r.ShippingLine,
+        type_costs: dem && det ? 'Demurrage + Detention' : dem ? 'Demurrage' : det ? 'Detention' : 'Storage',
+        ata: r.ATA + 'T00:00:00Z', storage: sto, demurrage: dem, detention: det, aantal_dagen: days,
+        warehouse: r.Warehouse, uitgaande_factuurnr: 'OUT-26-' + digits(rr, 5), uitgaande_factuur_datum: iso(inv + 2 * DAY)
+      });
+    });
+    return rows;
+  }
+
+  // ---------- OTHER: FMS storage operations and TERREX project cargo ----------
+  const FMS_OPS = ['Release pallets', 'Reception pallets', 'Repacking', 'Relabelling', 'Stock count', 'Sampling', 'Bag repair'];
+  const FMS_USERS = ['A. Peeters', 'L. Janssens', 'M. Claes', 'S. Wouters', 'K. Maes', 'R. De Smet'];
+  function genFms(){
+    const rows = []; let id = 30001;
+    const whs = ['Central - Quay 660', 'Greenfield', 'Bluegate', 'Eastfield'];
+    for (let t = START; t <= TODAY; t += DAY) {
+      const r = rngFor('fms', t);
+      if (new Date(t).getUTCDay() % 6 === 0) continue;
+      const n = between(r, 1, 3);
+      for (let i = 0; i < n; i++) {
+        const wh = pick(r, whs), clients = WH_CLIENT_MAP[wh] || ['Manucor'];
+        const closed = past(t + 2 * DAY);
+        const d = new Date(t);
+        rows.push({ id: id++, status: closed ? 'Finished' : 'Active', date_received: iso(t), warehouse: wh, client: pick(r, clients),
+          user_name: pick(r, FMS_USERS), itos_nbr: 'FMS-' + digits(r, 6), operation: pick(r, FMS_OPS), client_ref: 'REL-' + digits(r, 6),
+          transport_no: 'TR-' + digits(r, 5), lot: 'LOT' + digits(r, 7), transporter: pick(r, ['Van Dijk Transport', 'Scheldt Haulage', 'Kempen Logistics', 'Client pick-up']),
+          start_time: String(between(r, 6, 16)).padStart(2, '0') + ':' + pick(r, ['00', '15', '30', '45']), date_created: iso(t - DAY),
+          category: pick(r, ['A', 'B', 'C']), rls_plts: String(between(r, 4, 26)), plts_rls_type: pick(r, ['Euro pallet', 'Block pallet', 'Big bag']),
+          netto_weight_kg: String(between(r, 4, 25) * 1000), date_drag_drop: iso(t), closed_date: closed ? iso(t + 2 * DAY) : '',
+          remarks: '', sheet_tab: ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][d.getUTCMonth()] + '-' + d.getUTCFullYear() });
+      }
+    }
+    return rows;
+  }
+  function genTerrex(){
+    const rows = []; let id = 40001; const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    for (let wk = START, wi = 0; wk <= HORIZON; wk += 7 * DAY, wi++) {
+      const r0 = rngFor('trx-week', wi), n = between(r0, 2, 5);
+      for (let i = 0; i < n; i++) {
+        const r = rngFor('trx', wi, i), line = wpick(r, LINES.map(l => [l, l.w]));
+        const eta = wk + between(r, 0, 6) * DAY, d = new Date(eta);
+        rows.push({ id: id++, status: past(eta + 5 * DAY) ? 'Finished' : 'Active', warehouse: 'Portside Stevedoring', client: 'Terrex',
+          eta_vessel_antwerp: d.getUTCDate() + '-' + MON[d.getUTCMonth()], call_off_nbr: 'CO-' + digits(r, 6), cofano_dossier_nbr: 'COF' + digits(r, 7),
+          date_created_cofano: iso(eta - 6 * DAY), vessel: pick(r, line.vessels), shipping_line: line.name, bl: line.bl + digits(r, 9),
+          type_container: pick(r, ['40HC', '40FR', '20DV', '40OT']), container_number: containerNo(pick(r, line.owners), r),
+          delivery_place: pick(r, ['Assembly hall 3', 'Yard B', 'Parts DC']), location: 'Quay ' + pick(r, ['1143', '1147']),
+          weight: String(between(r, 8, 28) * 1000), adr: r() < 0.1 ? 'Yes' : 'No', pick_up_quay: 'Quay ' + pick(r, ['913', '869', '1742']),
+          pin_code: past(eta) ? digits(r, 6) : '', type_pick_up_transport: pick(r, ['Truck', 'Barge']), scanning: r() < 0.08 ? 'Selected' : 'No',
+          empty_delivery_quay: 'Depot Noord', empty_delivery_reference: 'ER' + digits(r, 6), t1_vms_ref: 'T1-' + digits(r, 8),
+          t1_valid_until: iso(eta + 14 * DAY), labels_in_cofano: past(eta) ? 'OK' : '', remarks: '',
+          sheet_tab: MON[d.getUTCMonth()].toUpperCase() + '-' + d.getUTCFullYear() });
+      }
+    }
+    return rows;
+  }
+
+  // ---------- SOP library ----------
+  function genSop(){
+    const step = (id, title, html) => ({ id: id, title: title, html: html });
+    return [{
+      id: 1, docId: 'demo-sop-document', warehouse: 'Central - Quay 660', client: 'Summit Polymers',
+      tasks: [
+        { id: 10, title: 'Inbound container reception', steps: [
+          step(101, 'Pre-alert and document check', '<p>Check the pre-alert in the WMS. Verify commercial invoice, packing list and BL against the order. Missing documents are requested from the client within 2 working hours.</p>'),
+          step(102, 'Arrival notice and THC', '<p>Confirm the arrival notice from the shipping line. Check that THC is paid before the vessel berths, otherwise escalate to the client contact.</p>'),
+          step(103, 'Customs declaration', '<p>Request the import declaration (type IMAJ) as soon as documents are complete. Upload the T1 to the shipment file and record the F-number.</p>'),
+          step(104, 'Pincode and pick-up', '<p>Once customs is released, wait for the terminal pincode, then book the pick-up in the TMS. Respect the pick-up-until date to avoid demurrage.</p>') ] },
+        { id: 11, title: 'Customs requesting', steps: [
+          step(111, 'Prepare the request', '<p>Send invoice, packing list, BL and HS codes to the customs desk. Mark the CT entry Customs Req as OK.</p>'),
+          step(112, 'Follow up release', '<p>Check customs status twice a day. When the release is received, set Customs Rec to OK and inform planning.</p>') ] },
+        { id: 12, title: 'Outbound loading', steps: [
+          step(121, 'Prepare loading slip', '<p>Print the loading slip, check storage locations and reserve the batch in the WMS.</p>'),
+          step(122, 'Seal and close', '<p>Confirm that seals match the documents. Record seal number and licence plate, then close the order in the WMS.</p>') ] }
+      ]
+    }];
+  }
+
+  // ---------- storage: generated base + local patches ----------
+  const _gen = {};
+  function base(name){
+    if (_gen[name]) return _gen[name];
+    if (name === 'shipments') _gen[name] = genInbound();
+    else if (name === 'outbound_shipments') _gen[name] = genOutbound();
+    else if (name === 'dem_det') _gen[name] = genDemDet(getTable('shipments'));
+    else if (name === 'dem_det_days') _gen[name] = genDemDetDays(getTable('shipments'));
+    else if (name === 'dd_changes') _gen[name] = genDdChanges(getTable('dem_det'));
+    else if (name === 'sales_dd') _gen[name] = genSalesDD(getTable('shipments'));
+    else if (name === 'fms') _gen[name] = genFms();
+    else if (name === 'terrex') _gen[name] = genTerrex();
+    else if (name === 'sops') _gen[name] = genSop();
+    else _gen[name] = [];
+    return _gen[name];
+  }
+  function lsGet(k){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+  function lsSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { console.warn('[demo] storage full', e); return false; } }
+  function getTable(name){
+    const full = lsGet('demo_full_' + name);
+    if (full) return full;
+    const patches = lsGet('demo_patch_' + name) || {}, added = lsGet('demo_add_' + name) || [];
+    const rows = base(name).map(r => patches[r.id] ? Object.assign({}, r, patches[r.id]) : r);
+    return rows.concat(added.map(r => patches[r.id] ? Object.assign({}, r, patches[r.id]) : r));
+  }
+  function saveTable(name, data){ lsSet('demo_full_' + name, data); }
+  function patchRow(name, id, fields){
+    const p = lsGet('demo_patch_' + name) || {};
+    p[id] = Object.assign(p[id] || {}, fields);
+    lsSet('demo_patch_' + name, p);
+  }
+  function addRow(name, row){
+    const a = lsGet('demo_add_' + name) || [];
+    row.id = row.id || Date.now();
+    a.push(row); lsSet('demo_add_' + name, a);
+    return row.id;
+  }
+  window.__demoDB = { getTable: getTable, patchRow: patchRow, addRow: addRow, today: iso(TODAY) };
+  window.resetDemoData = function(){
+    if (!confirm('Reset all demo data? Your edits in this browser will be removed.')) return;
+    try { Object.keys(localStorage).forEach(function(k){ if (/^demo_(full|patch|add)_/.test(k) || /^ct_(inbound|outbound)_cache$/.test(k)) localStorage.removeItem(k); }); } catch (e) {}
+    location.reload();
   };
 
-  const MOCK_FMS = [];
-  for (let i = 1; i <= 20; i++) {
-    MOCK_FMS.push({
-      id: 3000 + i,
-      status: "Active",
-      date_received: "2026-08-05",
-      warehouse: warehouses[i % warehouses.length],
-      client: clients[i % clients.length],
-      user_name: "John Doe",
-      itos_nbr: "FMS-" + i,
-      operation: "Standard Storage",
-      client_ref: "REF-" + i,
-      transport_no: "TR-" + i,
-      lot: "LOT-" + i,
-      transporter: "Transport Service",
-      start_time: "09:00",
-      date_created: "2026-08-01",
-      category: "A",
-      rls_plts: "5",
-      plts_rls_type: "Standard",
-      netto_weight_kg: "12500",
-      date_drag_drop: "2026-08-05",
-      closed_date: "",
-      remarks: "Sample FMS",
-      sheet_tab: "AUG-2026"
-    });
-  }
-
-  const MOCK_CATERPILLAR = [];
-  for (let i = 1; i <= 15; i++) {
-    MOCK_CATERPILLAR.push({
-      id: 4000 + i,
-      status: "Active",
-      warehouse: warehouses[i % warehouses.length],
-      client: "Caterpillar",
-      eta_vessel_antwerp: "10-Aug",
-      call_off_nbr: "CO-" + i,
-      cofano_dossier_nbr: "COF-" + i,
-      date_created_cofano: "2026-08-01",
-      vessel: vessels[i % vessels.length],
-      shipping_line: shippingLines[i % shippingLines.length],
-      bl: "BL-CAT-" + i,
-      type_container: "40HC",
-      container_number: "CATU" + String(800000 + i),
-      delivery_place: "Antwerp Warehouse",
-      location: "Kaai 1054",
-      weight: "18500",
-      adr: "No",
-      pick_up_quay: "Kaai 1054",
-      sheet_tab: "AUG-2026"
-    });
-  }
-
   // --- 2. INTERCEPT FETCH ---
+  const originalFetch = window.fetch.bind(window);
   window.fetch = async function(url, options) {
     const urlStr = typeof url === 'string' ? url : url.url || '';
     const cleanUrl = urlStr.replace(window.location.origin, '').replace(/^\/api/, '');
@@ -1906,7 +2149,7 @@ tbody td.ct-frozen{background:#fff!important}
 
     // shipments API
     if (cleanUrl.startsWith('/shipments')) {
-      const records = getTable('shipments', MOCK_INBOUND);
+      const records = getTable('shipments');
       if (method === 'DELETE') {
         saveTable('shipments', []);
         return new Response(JSON.stringify({ ok: true }), { status: 200 });
@@ -1921,13 +2164,13 @@ tbody td.ct-frozen{background:#fff!important}
 
     // outbound-shipments API
     if (cleanUrl.startsWith('/outbound-shipments')) {
-      const records = getTable('outbound_shipments', MOCK_OUTBOUND);
+      const records = getTable('outbound_shipments');
       return new Response(JSON.stringify(filterByClient(records, 'client')), { status: 200 });
     }
 
     // sales demurrage detention
     if (cleanUrl.startsWith('/sales-dd-overview')) {
-      const records = getTable('sales_dd', MOCK_SALES_DD);
+      const records = getTable('sales_dd');
       return new Response(JSON.stringify(filterByClient(records, 'klant')), { status: 200 });
     }
 
@@ -1940,11 +2183,11 @@ tbody td.ct-frozen{background:#fff!important}
       return new Response(JSON.stringify({ ok: true, found: true, id: 1, docId: MOCK_SOP.docId }), { status: 200 });
     }
     if (cleanUrl.startsWith('/sop/')) {
-      const sops = getTable('sops', [MOCK_SOP]);
+      const sops = getTable('sops');
       return new Response(JSON.stringify(sops[0]), { status: 200 });
     }
     if (cleanUrl.startsWith('/sop-task')) {
-      const sops = getTable('sops', [MOCK_SOP]);
+      const sops = getTable('sops');
       if (method === 'DELETE') {
         const taskId = parseInt(cleanUrl.split('/').pop());
         sops[0].tasks = sops[0].tasks.filter(t => t.id !== taskId);
@@ -1960,7 +2203,7 @@ tbody td.ct-frozen{background:#fff!important}
       }
     }
     if (cleanUrl.startsWith('/sop-step')) {
-      const sops = getTable('sops', [MOCK_SOP]);
+      const sops = getTable('sops');
       if (method === 'DELETE') {
         const stepId = parseInt(cleanUrl.split('/').pop());
         sops[0].tasks.forEach(t => {
@@ -1979,16 +2222,46 @@ tbody td.ct-frozen{background:#fff!important}
       }
     }
 
-    // FMS and Caterpillar
+    // FMS and Terrex
     if (cleanUrl.startsWith('/fms')) {
-      const records = getTable('fms', MOCK_FMS);
+      const records = getTable('fms');
       return new Response(JSON.stringify(filterByClient(records, 'client')), { status: 200 });
     }
-    if (cleanUrl.startsWith('/caterpillar')) {
-      const records = getTable('caterpillar', MOCK_CATERPILLAR);
+    if (cleanUrl.startsWith('/terrex')) {
+      const records = getTable('terrex');
       return new Response(JSON.stringify(filterByClient(records, 'client')), { status: 200 });
     }
 
+
+    // Dem & Det tracker
+    if (cleanUrl.startsWith('/dem-det-days')) {
+      return new Response(JSON.stringify(getTable('dem_det_days')), { status: 200 });
+    }
+    if (cleanUrl.startsWith('/dem-det')) {
+      return new Response(JSON.stringify(filterByClient(getTable('dem_det'), 'Client')), { status: 200 });
+    }
+    if (cleanUrl.startsWith('/dd-changes')) {
+      return new Response(JSON.stringify(filterByClient(getTable('dd_changes'), 'client')), { status: 200 });
+    }
+    if (cleanUrl.startsWith('/dd-virtual-stock') || cleanUrl.startsWith('/dd-status-upload')) {
+      return new Response(JSON.stringify({ ok: true }), { status: 200 });
+    }
+    // CT Entry: new rows from the entry form
+    if (cleanUrl.startsWith('/entry') && method === 'POST') {
+      const e = JSON.parse(options.body || '{}');
+      const id = addRow('shipments', { Warehouse: e.warehouse, Client: e.client, ItosBoltrics: e.itos_boltrics, ClientRef: e.client_ref,
+        ETA: e.eta, Delay: e.legacy_delay || e.eta, ATA: e.ata, Vessel: e.vessel, ShippingLine: e.shipping_line,
+        Containers: parseInt(e.containers) || 1, ContainerType: e.container_type, ContainerNbr: e.container_nbr,
+        DateDocReceived: e.date_doc_received, Docs: e.docs || 'NOK', Fnr: e.fnr, Status: e.status || 'Active', Remarks: e.remarks, HasTms: true, TMS: 'OK' });
+      return new Response(JSON.stringify({ ok: true, id: id }), { status: 200 });
+    }
+    // CT Entry sheet: no Google Sheet in the demo, the app renders its own sheet view
+    if (cleanUrl.startsWith('/sheet-info')) {
+      return new Response(JSON.stringify({ ok: true, demo: true }), { status: 200 });
+    }
+    if (cleanUrl.startsWith('/sync-all') || cleanUrl.startsWith('/sop-import') || cleanUrl.startsWith('/dem-det-days/upload')) {
+      return new Response(JSON.stringify({ ok: true, synced: 0 }), { status: 200 });
+    }
     // debug columns & sheet structure maps
     if (cleanUrl.startsWith('/debug-columns') || cleanUrl.startsWith('/debug-outbound-columns')) {
       const isOutbound = cleanUrl.includes('outbound');
@@ -2029,8 +2302,8 @@ tbody td.ct-frozen{background:#fff!important}
       return new Response(JSON.stringify({
         ok: true,
         mapped: [
-          { label: "Swiss Polymers", colLetter: "A", header: "Container", tabs: ["AUG-2026"] },
-          { label: "Ceca", colLetter: "A", header: "Container", tabs: ["AUG-2026"] }
+          { label: "Summit Polymers", colLetter: "A", header: "Container", tabs: ["AUG-2026"] },
+          { label: "Cerix", colLetter: "A", header: "Container", tabs: ["AUG-2026"] }
         ],
         unmapped: []
       }), { status: 200 });
@@ -2071,7 +2344,7 @@ function applyAccessRestrictions(){
   var acc = _userAccess();
 
   // VA section (sidebar label + nav items)
-  ['navWarehouseLabel','navVA','navSubVA','navVAu12','navVASabic'].forEach(function(id){
+  ['navWarehouseLabel','navVA','navSubVA','navVAu12','navVAUnit2'].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.style.display = acc.va ? '' : 'none';
   });
@@ -2149,13 +2422,13 @@ function doMockLogin() {
   if (role === 'Admin') {
     config = { edit: true, va: true, vmf: true, ctEntry: true, salesDD: true, sop: true, warehouses: null };
   } else if (role === 'Operator') {
-    config = { edit: true, va: true, vmf: false, ctEntry: true, salesDD: false, sop: true, warehouses: ['Brasil - Kaai 1054', 'Oudendijk - Kaai 1994'] };
+    config = { edit: true, va: true, vmf: false, ctEntry: true, salesDD: false, sop: true, warehouses: ['Riverside - Quay 1054', 'Westdyke - Quay 1994'] };
   } else if (role === 'Sales') {
     config = { edit: false, va: false, vmf: true, ctEntry: false, salesDD: true, sop: true, warehouses: null };
-  } else if (role === 'Customer_Swiss') {
-    config = { edit: false, va: false, vmf: false, ctEntry: false, salesDD: true, sop: false, warehouses: null, clients: ['Swiss Polymers'] };
-  } else if (role === 'Customer_Ceca') {
-    config = { edit: false, va: false, vmf: false, ctEntry: false, salesDD: true, sop: false, warehouses: null, clients: ['Ceca'] };
+  } else if (role === 'Customer_Summit') {
+    config = { edit: false, va: false, vmf: false, ctEntry: false, salesDD: true, sop: false, warehouses: null, clients: ['Summit Polymers'] };
+  } else if (role === 'Customer_Cerix') {
+    config = { edit: false, va: false, vmf: false, ctEntry: false, salesDD: true, sop: false, warehouses: null, clients: ['Cerix'] };
   } else if (role === 'Viewer') {
     config = { edit: false, va: false, vmf: false, ctEntry: false, salesDD: false, sop: false, warehouses: null };
   }
@@ -2166,7 +2439,7 @@ function doMockLogin() {
 
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('userBadgeWrap').style.display = 'flex';
-  const roleName = role === 'Customer_Swiss' ? 'Swiss Customer' : role === 'Customer_Ceca' ? 'Ceca Customer' : role;
+  const roleName = role === 'Customer_Summit' ? 'Summit Customer' : role === 'Customer_Cerix' ? 'Cerix Customer' : role;
   document.getElementById('ctUserName').textContent = roleName;
   const sbUser = document.getElementById('sbCtUserName');
   if (sbUser) sbUser.textContent = roleName;
@@ -2190,7 +2463,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('userBadgeWrap').style.display = 'flex';
     const roleVal = sessionStorage.getItem('ctCurrentUser') || 'Viewer';
-    const roleName = roleVal === 'Customer_Swiss' ? 'Swiss Customer' : roleVal === 'Customer_Ceca' ? 'Ceca Customer' : roleVal;
+    const roleName = roleVal === 'Customer_Summit' ? 'Summit Customer' : roleVal === 'Customer_Cerix' ? 'Cerix Customer' : roleVal;
     document.getElementById('ctUserName').textContent = roleName;
     const sbUser = document.getElementById('sbCtUserName');
     if (sbUser) sbUser.textContent = roleName;
@@ -2777,7 +3050,7 @@ $('fileInput').addEventListener('change',async function(e){
         const iWH=ci('Warehouse');
         const iCL=ci('Transport by');
         const iItos=ci('iTOS nbr');
-        const iRef=ci('Sabic reference (450)');
+        const iRef=ci('Solvane reference (450)');
         const iETA=ci('ETA');
         const iDelay=ci('DELAY');
         const iATA=ci('ATA ship');
@@ -2872,10 +3145,10 @@ const SHIP_CTR_COLS=[
 ];
 let ctrAllRecs=[],ctrOrigRecs=[],ctrRenderCount=0;
 function getCtrCols(){
-  const allCF=ctrAllRecs.length>0&&ctrAllRecs.every(r=>/cortevafr/i.test(String(r.Client||'').toLowerCase().replace(/[\s\-]/g,'')));
+  const allCF=ctrAllRecs.length>0&&ctrAllRecs.every(r=>/cortanefr/i.test(String(r.Client||'').toLowerCase().replace(/[\s\-]/g,'')));
   let cols=allCF?SHIP_CTR_COLS:SHIP_CTR_COLS.filter(c=>c.key!=='DepotIn');
-  const hasTrinasolar=ctrOrigRecs.some(r=>/trinasolar/i.test(r.Client||''));
-  if(!hasTrinasolar) return cols;
+  const hasTrinasun=ctrOrigRecs.some(r=>/trinasun/i.test(r.Client||''));
+  if(!hasTrinasun) return cols;
   const tmsIdx=cols.findIndex(c=>c.key==='TMS');
   if(tmsIdx===-1) return cols;
   return [...cols.slice(0,tmsIdx+1),{key:'CofanoRef',lbl:'Cofano Ref',w:110},...cols.slice(tmsIdx+1)];
@@ -2894,8 +3167,8 @@ function _ctrRowHtml(r){
     else if(c.key==='TMS')cell=B(v);
     else if(c.key==='Release')cell=v==='-'?'<span style="color:var(--text-dim)">—</span>':B(v);
     else if(['AN','THC','POP','CustomsReq','CustomsRec','Docs'].includes(c.key))cell=B(v);
-    else if(c.key==='T1Req'||c.key==='T1Ok'){if(/dasbach/i.test(r.Client||''))cell='<span style="color:var(--text-dim)">—</span>';else{const hv=v&&v!=='-'&&String(v).trim()!=='';cell=B(hv?'OK':'NOK');}}
-    else if(c.key==='Cofano'){cell=/dasbach/i.test(r.Client||'')?'<span style="color:var(--text-dim)">—</span>':(v?'<span style="color:var(--green);font-weight:600;font-size:10px">YES</span>':'<span style="color:var(--text-dim)">—</span>');}
+    else if(c.key==='T1Req'||c.key==='T1Ok'){if(/dashfield/i.test(r.Client||''))cell='<span style="color:var(--text-dim)">—</span>';else{const hv=v&&v!=='-'&&String(v).trim()!=='';cell=B(hv?'OK':'NOK');}}
+    else if(c.key==='Cofano'){cell=/dashfield/i.test(r.Client||'')?'<span style="color:var(--text-dim)">—</span>':(v?'<span style="color:var(--green);font-weight:600;font-size:10px">YES</span>':'<span style="color:var(--text-dim)">—</span>');}
     else if(c.key==='CofanoRef'){const rv=v&&String(v).trim()&&String(v).trim()!=='-'?String(v).trim():'';cell=rv?'<span style="color:var(--cyan2);font-size:10px" title="'+E(rv)+'">'+rv+'</span>':'<span style="color:var(--text-dim)">—</span>';}
     else if(c.key==='Fnr')cell=v==='NA'?B('NA'):'<span style="color:var(--cyan2);font-size:10px">'+(v||'')+'</span>';
     else if(c.key==='InputTms')cell='<span style="color:var(--cyan);font-size:10px">'+(v||'')+'</span>';
@@ -3011,7 +3284,7 @@ function _openCtrModal(title,statsHtml,recs){
   const _MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const _fmtMo=v=>{const[y,m]=v.split('-');return _MO[parseInt(m)-1]+' '+y;};
   const wS=[...new Set(recs.map(r=>r.Warehouse).filter(Boolean))].sort();
-  const cS=[...new Set(recs.map(r=>r.Client).filter(Boolean))].filter(c=>c.trim().toLowerCase()!=='expeditors').sort();
+  const cS=[...new Set(recs.map(r=>r.Client).filter(Boolean))].filter(c=>c.trim().toLowerCase()!=='forwarders').sort();
   const moS=[...new Set(recs.map(r=>{const d=shipDate(r);return d?d.substring(0,7):null;}).filter(Boolean))].sort();
   MODAL_MS_STATE.cfWH = new Set(MS_STATE.fWH);
   MODAL_MS_STATE.cfClient = new Set(MS_STATE.fClient);
@@ -3249,10 +3522,10 @@ function modalMsClear(id){
 }
 
 // Default (static) options to keep in filters even when no data row exists for them
-const DEFAULT_WHS = ["Warehouse 1","Warehouse 2","Warehouse 3","Warehouse 4","Warehouse 5","Warehouse 6","Warehouse 7","Warehouse 8","Warehouse 9","Warehouse 10","Warehouse 11","Warehouse 12","Warehouse 13","Warehouse 14","Warehouse 15"];
-const DEFAULT_CLIENTS = ["Client 1","Client 2","Client 3","Client 4","Client 5","Client 6","Client 7","Client 8","Client 9","Client 10","Client 11","Client 12","Client 13","Client 14","Client 15","Client 16","Client 17","Client 18","Client 19","Client 20","Client 21","Client 22","Client 23","Client 24","Client 25","Client 26","Client 27","Client 28","Client 29","Client 30","Client 31","Client 32","Client 33","Client 34","Client 35","Client 36","Client 37","Client 38","Client 39","Client 40","Client 41","Client 42","Client 43","Client 44","Client 45","Client 46","Client 47","Client 48","Client 49","Client 50","Client 51","Client 52","Client 53","Client 54","Client 55","Client 56","Client 57","Client 58","Client 59","Client 60","Client 61","Client 62","Client 63","Client 64","Client 65","Client 66","Client 67","Client 68","Client 69","Client 70","Client 71","Client 72","Client 73","Client 74","Client 75"];
+const DEFAULT_WHS = ["Bluegate", "Riverside - Quay 1054", "Cleaning - Quay 1054", "Filling 1054", "Greenfield", "Forwarding", "Eastfield", "Hazmat - Quay 1167", "Northpoint - Quay 1793", "Central - Quay 660", "Westdyke - Quay 1994", "Southfarm", "Harbourside 650", "Depot 650", "Portside - Quay 1143", "Portside - Quay 1147"];
+const DEFAULT_CLIENTS = ["Alderan Europe Road", "Alderan Europe Sea", "Alderan Germany", "Alderan Packed", "Alderan/Kestrel Bulk", "Ardent", "Ardent ISO Tank", "Axira", "BKL", "Balvor Agro", "Bayline - Sinoport", "Borsavex", "Bosmere Steiner", "Brakon", "Brakon PIB", "Bridgeway Polymers", "Cerix", "Chemora", "Chevlin", "Contivia", "Cortane CH", "Cortane FR", "Corvell", "Dashfield", "De Ridder", "Delta Chemicals", "EVF", "Envira", "Esmara", "Evolen", "Fujin", "Hakofreight", "Hallis", "Hanvale Bulk", "Hanvale Total", "Hyolan Chemical", "IMEK", "Italvero", "Karl Brenner", "Kestrel Bulk", "Kestrel Packed", "Lanvex", "MFTI", "Manucor", "Meiro", "Meravis", "Nisaro JP", "Nordpac", "Oleva", "PSV", "Prakar", "Prayel", "Primeco", "Puretide", "Purevia", "R+L", "Remar", "Rhenvale", "Sealink", "Sebrin", "Solenta", "Solvane", "Staudinger", "Sumira", "Summit Polymers", "Sunfield Rice", "TPX", "Taeyang", "Tegrin", "Trinasun", "Trinora", "Trivon", "U-Flow", "UXL", "UXL - Aristo", "Vestra Chemicals", "Yukon", "Yukon Harbourside 650"];
 // Explicit aliases for config keys where fuzzy (no-space) matching isn't enough
-const CLIENT_ALIASES={'albemarleeuropesea':'Albemarle Europe Sea','albemarlegermanysea':'Albemarle Germany','ketjenbulksea':'Ketjen Bulk','emviavmr1147':'Emvia','rhenuvmr1147':'Rhenus','manuchargrobbendonk':'Manuchar','borsodchemtrucks':'Borsodchem'};
+const CLIENT_ALIASES={'alderaneuropesea':'Alderan Europe Sea','alderangermanysea':'Alderan Germany','kestrelbulksea':'Kestrel Bulk','enviraportside1147':'Envira','rhenuportside1147':'Rhenvale','manucoreastfield':'Manucor','borsavextrucks':'Borsavex'};
 const DEFAULT_SHIPPING_LINES = ["ACL","CMA CGM","COSCO","Evergreen","Hapag-Lloyd","HMM","ICL","Maersk","MSC","ONE","OOCL","SCI","Yang Ming"];
 const MON_NAME=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -3271,7 +3544,7 @@ function msRenderOpts(id, items, labelFn){
   }
   (items||[]).forEach(function(v){
     const val=String(v);
-    if(id==='fClient'&&val.trim().toLowerCase()==='expeditors')return;
+    if(id==='fClient'&&val.trim().toLowerCase()==='forwarders')return;
     const lbl=labelFn?labelFn(v):val;
     const div=document.createElement('div');
     div.className='ms-opt'+(MS_STATE[id].has(val)?' selected':'');
@@ -3482,7 +3755,7 @@ window.addEventListener('scroll',function(){
 // ── Name canonicalisation ──────────────────────────────────────────────────
 // Trim whitespace, collapse multiple spaces, then find a case-insensitive
 // match in the canonical list. If found → use the canonical spelling.
-// This handles "kaai" vs "Kaai", extra spaces, etc. automatically.
+// This handles "quay" vs "Quay", extra spaces, etc. automatically.
 function toTitleCaseIfAllCaps(str) {
   if (!str) return str;
   const s = String(str).trim();
@@ -3501,18 +3774,18 @@ function formatClientName(str) {
   const clean = String(str).trim().replace(/\s+/g, ' ');
   const flat = clean.toLowerCase().replace(/[^a-z0-9]/g, '');
   const specialMap = {
-    'bdp': 'BDP',
-    'byd': 'BYD - Sinotrans',
+    'bkl': 'BKL',
+    'bayline': 'Bayline - Sinoport',
     'dsv': 'DSV',
-    'cortevach': 'Corteva CH',
-    'edf': 'EDF',
-    'imec': 'IMEC',
-    'karlgross': 'Karl Gross',
-    'mfci': 'MFCI',
-    'psa': 'PSA',
-    'tpl': 'TPL',
-    'upl': 'UPL',
-    'uplarysta': 'UPL - Arysta'
+    'cortanech': 'Cortane CH',
+    'evf': 'EVF',
+    'imek': 'IMEK',
+    'karlbrenner': 'Karl Brenner',
+    'mfti': 'MFTI',
+    'psv': 'PSV',
+    'tpx': 'TPX',
+    'uxl': 'UXL',
+    'uxlaristo': 'UXL - Aristo'
   };
   if (specialMap[flat]) {
     return specialMap[flat];
@@ -3536,7 +3809,7 @@ function canonicalize(val, list){
   const n=val.trim().replace(/\s+/g,' ');
   const hit=list.find(c=>c.trim().toLowerCase()===n.toLowerCase());
   if(hit)return hit;
-  // Fuzzy: strip spaces/symbols — maps "DLChemicals"→"DL Chemicals", "KN"→"K+N", etc.
+  // Fuzzy: strip spaces/symbols — maps "DeltaChemicals"→"Delta Chemicals", "RL"→"R+L", etc.
   const flat=n.toLowerCase().replace(/[\s\-+&\/]/g,'');
   const fuzzy=list.find(c=>c.trim().toLowerCase().replace(/[\s\-+&\/]/g,'')===flat);
   return fuzzy||n;
@@ -3553,8 +3826,8 @@ function normalizeRecord(r){
   }
   if(r.ShippingLine)r.ShippingLine=canonicalize(normaliseSL(r.ShippingLine),DEFAULT_SHIPPING_LINES);
   const _hasVal=v=>!!(v&&v!=='-'&&String(v).trim()!==''&&String(v).trim().toUpperCase()!=='NA');
-  if(r.Client==='Hanwha Total')r.Docs=_hasVal(r.DateDocReceived)?'OK':'NOK';
-  if(r.TMS!=='NA'&&r.Client!=='Albemarle Europe Sea') r.TMS=computeTmsValue(r.Fnr,r.InputTms);
+  if(r.Client==='Hanvale Total')r.Docs=_hasVal(r.DateDocReceived)?'OK':'NOK';
+  if(r.TMS!=='NA'&&r.Client!=='Alderan Europe Sea') r.TMS=computeTmsValue(r.Fnr,r.InputTms);
   if(r.StatusOverride) r.Status = r.StatusOverride;
   return r;
 }
@@ -3570,7 +3843,7 @@ function dedupInsensitive(arr) {
 
 function rebuildFilters(){
   if(activeTmsFilters.size===1&&activeTmsFilters.has('other')){
-    const src=RAW_FMS.concat(RAW_CATERPILLAR);
+    const src=RAW_FMS.concat(RAW_Terrex);
     const whs=[...new Set(src.map(r=>r.Warehouse).filter(Boolean))].sort();
     const cls=[...new Set(src.map(r=>r.Client).filter(Boolean))].sort();
     const yrs=[...new Set(src.map(r=>(r.DateReceived||'').substring(0,4)).filter(Boolean))].sort();
@@ -3592,7 +3865,7 @@ function rebuildFilters(){
         if(r.Warehouse==='VMF') return false;
         if(_rWH&&!_rWH.some(w=>w.toLowerCase()===(r.Warehouse||'').toLowerCase())) return false;
         return true;
-      }).map(r=>r.Client).filter(Boolean))].filter(c=>{const cl=c.trim().toLowerCase();if(cl==='expeditors')return false;if(cl==='ceca'&&activeTmsFilters.has('container')&&!activeTmsFilters.has('truck'))return false;return true;}).sort();
+      }).map(r=>r.Client).filter(Boolean))].filter(c=>{const cl=c.trim().toLowerCase();if(cl==='forwarders')return false;if(cl==='cerix'&&activeTmsFilters.has('container')&&!activeTmsFilters.has('truck'))return false;return true;}).sort();
   const slsData=[...new Set(RAW.map(r=>normaliseSL(r.ShippingLine)).filter(Boolean))].sort();
   // Merge defaults with data-driven lists only for inbound (outbound has its own client set)
   const isInbound = activeType !== 'outbound';
@@ -3626,8 +3899,8 @@ let activeType='inbound';
 let activeTmsFilters=new Set(['container']);
 let RAW_FMS=[];
 let fmsLoaded=false;
-let RAW_CATERPILLAR=[];
-let caterpillarLoaded=false;
+let RAW_Terrex=[];
+let terrexLoaded=false;
 let activeVmfMode=false;
 let activePlanningGroup=null;
 const OPERATOR_CODES=['ITV','IMD','ISB','ISG','IBV','ISR','IIA','IAA','IWD','IJJ','IVK','IER'];
@@ -3636,8 +3909,8 @@ function extractOperator(itos){
   return m?m[1].toUpperCase():null;
 }
 const PLANNING_GROUPS={
-  'dok_ro':new Set(['blauwhoef','ecowell','nnrc - kaai 660','schomhoeve','servaes - kaai 650 packed','servaes - kaai 650 tank']),
-  'dok_lo':new Set(['brasil - kaai 1054','cleaning - kaai 1054','hazop - kaai 1167','kalishoek - kaai 1793','oudendijk - kaai 1994','vmr - kaai 1143','vmr - kaai 1147'])
+  'dok_ro':new Set(['bluegate','greenfield','central - quay 660','southfarm','harbourside - quay 650 packed','harbourside - quay 650 tank']),
+  'dok_lo':new Set(['riverside - quay 1054','cleaning - quay 1054','hazmat - quay 1167','northpoint - quay 1793','westdyke - quay 1994','portside - quay 1143','portside - quay 1147'])
 };
 function setPlanningGroup(g){
   activePlanningGroup=(activePlanningGroup===g)?null:g;
@@ -3656,23 +3929,23 @@ var RAW_INBOUND_CACHE=[];   // saved inbound rows while outbound is active
 var RAW_OUTBOUND_CACHE=[];  // cached outbound rows to avoid re-fetching
 
 const OB_CLIENT_DISPLAY = {
-  'SabicOutbound':           'Sabic',
-  'VinmarOutbound':          'Tegral/Axia',
-  'HanwhaBulkOutbound':      'Hanwha Bulk',
-  'CarpenterOutbound':       'Carpenter',
-  'HaasOutbound':            'Haas',
-  'CaterpillarOutbound':     'Caterpillar',
-  'CecaOutbound':            'Ceca',
+  'SolvaneOutbound':           'Solvane',
+  'VantorOutbound':          'Tegrin/Axira',
+  'HanvaleBulkOutbound':      'Hanvale Bulk',
+  'CorvellOutbound':       'Corvell',
+  'HallisOutbound':            'Hallis',
+  'TerrexOutbound':     'Terrex',
+  'CerixOutbound':            'Cerix',
   'ForwardingOutbound':      'Forwarding',
-  'NipponAxeOutbound':       'Nippon 1',
-  'Nippon2AxeOutbound':      'Nippon 2',
-  'AlbEuropeRoadOutbound':   'Albemarle Europe (Road)',
-  'AlbEuropeSeaOutbound':    'Albemarle Europe (Sea)',
-  'AlbGermanyRoadOutbound':  'Albemarle Germany (Road)',
-  'AlbGermanySeaOutbound':   'Albemarle Germany (Sea)',
-  'KetjenRoadOutbound':      'Ketjen (Road)',
-  'KetjenSeaOutbound':       'Ketjen (Sea)',
-  'ExpeditorOutbound':       'Expeditors',
+  'NordpacAxeOutbound':       'Nordpac 1',
+  'Nordpac2AxeOutbound':      'Nordpac 2',
+  'AlbEuropeRoadOutbound':   'Alderan Europe (Road)',
+  'AlbEuropeSeaOutbound':    'Alderan Europe (Sea)',
+  'AlbGermanyRoadOutbound':  'Alderan Germany (Road)',
+  'AlbGermanySeaOutbound':   'Alderan Germany (Sea)',
+  'KestrelRoadOutbound':      'Kestrel (Road)',
+  'KestrelSeaOutbound':       'Kestrel (Sea)',
+  'ForwarderOutbound':       'Forwarders',
 };
 function _isoWeek(dateStr){
   if(!dateStr)return null;
@@ -3684,13 +3957,13 @@ function _isoWeek(dateStr){
 }
 function normalizeOutboundRecord(r){
   const _hasVal=v=>!!(v&&v!=='-'&&String(v).trim()!==''&&String(v).trim().toUpperCase()!=='NA');
-  const isHaas=/haas/i.test(r.client||'');
-  const isSabicVinmar=/sabic|vinmar/i.test(r.client||'');
-  const isAlbemarleOB=/^alb(europe|germany)/i.test(r.client||'');
-  const isNippon=/nippon/i.test(r.client||'');
+  const isHallis=/hallis/i.test(r.client||'');
+  const isSolvaneVantor=/solvane|vantor/i.test(r.client||'');
+  const isAlderanOB=/^alb(europe|germany)/i.test(r.client||'');
+  const isNordpac=/nordpac/i.test(r.client||'');
   const computedStatus=r.status==='Cancelled'?'Cancelled':_hasVal(r.itos_creation)?'Finished':'Active';
-  const useDbStatus=isSabicVinmar||isAlbemarleOB||isNippon;
-  const status=isHaas?(r.status||''):useDbStatus?(_hasVal(r.status_override)?r.status_override:(r.status||'Active')):(_hasVal(r.status_override)?r.status_override:computedStatus);
+  const useDbStatus=isSolvaneVantor||isAlderanOB||isNordpac;
+  const status=isHallis?(r.status||''):useDbStatus?(_hasVal(r.status_override)?r.status_override:(r.status||'Active')):(_hasVal(r.status_override)?r.status_override:computedStatus);
   return {
     _id:              r.id,
     _type:            'outbound',
@@ -3722,8 +3995,8 @@ function normalizeOutboundRecord(r){
     LicensePlates:           r.license_plates||'',
     OutboundCustomsDocNbr:   r.outbound_customs_doc_nbr||'',
     Delay:r.loading_date||r.eld||'', ETA:r.loading_date||r.eld||'',
-    ATA:'', Vessel:'', ShippingLine:'', Week:_isoWeek(r.loading_date||r.eld||''), Containers:0,
-    Docs:'', HSCode:'', AN:'', THC:'', POP:'', Release:'', TMS:'', Fnr:''
+    ATA:'', Vessel:'', ShippingLine:'', Week:_isoWeek(r.loading_date||r.eld||''), Containers:1, _rowCount:1,
+    Docs:(r.dn_packlist==='OK'?'OK':'NOK'), HSCode:'', AN:'', THC:'', POP:'', Release:'', TMS:'', Fnr:''
   };
 }
 
@@ -3775,7 +4048,7 @@ function openObDetail(r){
    +row('LS Sent',        d(r.LsSent))
    +row('Customs Request',bv(r.CustomsReq))
    +row('Customs Received',B(r.CustomsRec))
-   +(/nippon/i.test(r.ClientRaw||'')?
+   +(/nordpac/i.test(r.ClientRaw||'')?
       row('Loading Slip Check',B(r.LoadingSlipCheck))
      +row('DN / Packlist',     B(r.DnPacklist))
      +row('Labels',            B(r.Labels))
@@ -3792,7 +4065,7 @@ function setTmsFilter(v){
     if(!activeTmsFilters.has('other')){
       activeTmsFilters=new Set(['other']);
       loadFmsData();
-      loadCaterpillarData();
+      loadTerrexData();
     }
   }else{
     activeTmsFilters=new Set([v]);
@@ -3839,12 +4112,12 @@ async function loadFmsData(){
     applyF();
   }catch(e){console.error('FMS load error:',e);}
 }
-async function loadCaterpillarData(){
-  if(caterpillarLoaded){applyF();return;}
+async function loadTerrexData(){
+  if(terrexLoaded){applyF();return;}
   try{
-    const rows=await fetch('/api/caterpillar').then(r=>r.json());
+    const rows=await fetch('/api/terrex').then(r=>r.json());
     const monAbbr={};MON_NAME.forEach((m,i)=>{if(m)monAbbr[m.toLowerCase()]=i;});
-    // Caterpillar dates are stored as "D-Mon" text with no year — recover the year from the sheet tab (e.g. "JUN-2026").
+    // Terrex dates are stored as "D-Mon" text with no year — recover the year from the sheet tab (e.g. "JUN-2026").
     const toIso=(txt,sheetTab)=>{
       if(!txt)return '';
       const m=/^(\d{1,2})-([A-Za-z]+)/.exec(String(txt).trim());
@@ -3855,7 +4128,7 @@ async function loadCaterpillarData(){
       const year=ym?parseInt(ym[1]):new Date().getFullYear();
       return year+'-'+String(mon).padStart(2,'0')+'-'+String(day).padStart(2,'0');
     };
-    RAW_CATERPILLAR=rows.map(r=>({
+    RAW_Terrex=rows.map(r=>({
       _isOther:true,
       id:r.id,
       Status:r.status||'Active',
@@ -3887,11 +4160,11 @@ async function loadCaterpillarData(){
       Remarks:r.remarks||'',
       SheetTab:r.sheet_tab||'',
     }));
-    RAW_CATERPILLAR.forEach(r=>{r.Week=delayWeek(r.DateReceived||'')||null;});
-    caterpillarLoaded=true;
+    RAW_Terrex.forEach(r=>{r.Week=delayWeek(r.DateReceived||'')||null;});
+    terrexLoaded=true;
     rebuildFilters();
     applyF();
-  }catch(e){console.error('Caterpillar load error:',e);}
+  }catch(e){console.error('Terrex load error:',e);}
 }
 function setVmfFilter(v){
   if(vmfFclLcl.has(v)){if(vmfFclLcl.size>1)vmfFclLcl.delete(v);}else{vmfFclLcl.add(v);}
@@ -3903,7 +4176,7 @@ function getActiveCols(){
   if(activeType==='outbound')return getOutboundCols(filtered);
   if(activeVmfMode&&vmfFclLcl.size===1&&vmfFclLcl.has('lcl'))return MODAL_VMF_LCL_COLS;
   if(activeTmsFilters.size===1&&activeTmsFilters.has('other')){
-    if(MS_STATE.fClient.size===1&&MS_STATE.fClient.has('Caterpillar'))return MODAL_CATERPILLAR_COLS;
+    if(MS_STATE.fClient.size===1&&MS_STATE.fClient.has('Terrex'))return MODAL_Terrex_COLS;
     return MODAL_FMS_COLS;
   }
   const maps=[
@@ -3992,7 +4265,7 @@ function applyF(){
     const df=$('fDateFrom').value,dt=$('fDateTo').value;
     const selWH=MS_STATE.fWH,selCL=MS_STATE.fClient;
     const selMO=MS_STATE.fMonth,selWK=MS_STATE.fWeek,selYR=MS_STATE.fYear;
-    const pre=RAW_FMS.concat(RAW_CATERPILLAR).filter(r=>{
+    const pre=RAW_FMS.concat(RAW_Terrex).filter(r=>{
       const sd=r.DateReceived||'';
       if(selYR.size&&(!sd||!selYR.has(sd.substring(0,4))))return false;
       if(selMO.size&&(!sd||!selMO.has(sd.substring(5,7))))return false;
@@ -4149,7 +4422,7 @@ function updateAll(){
   const isOB=activeType==='outbound';
   const gs=isOB?filtered:groupShipments(filtered);
   const t=gs.length,cn=filtered.length;
-  const whs=new Set(gs.map(r=>r.Warehouse)).size,cls=new Set(filtered.map(r=>r.Client).filter(c=>c&&c.toLowerCase()!=='expeditors')).size;
+  const whs=new Set(gs.map(r=>r.Warehouse)).size,cls=new Set(filtered.map(r=>r.Client).filter(c=>c&&c.toLowerCase()!=='forwarders')).size;
   const act=isOB?filtered.filter(r=>r.Status==='Active').length:groupShipments(filtered.filter(r=>r.Status==='Active')).length;
   const dOK=gs.filter(r=>isOK(r.Docs)).length,cOK=gs.filter(r=>isOK(r.CustomsRec)).length,hOK=gs.filter(r=>isOK(r.HSCode)).length;
   // Container-level KPIs (each row in filtered = one container)
@@ -4185,7 +4458,7 @@ function chartTheme(){
 }
 function updateCharts(gs){
   if(!gs)gs=groupShipments(filtered);
-  const cntOf=r=>r.Warehouse==='VMF'?(r.Containers||r._rowCount||0):(r._containers.length||r._rowCount||0);
+  const cntOf=r=>r.Warehouse==='VMF'?(r.Containers||r._rowCount||0):((r._containers&&r._containers.length)||r._rowCount||0);
   const curYr=new Date().getFullYear().toString();
   const chartF=filtered.filter(r=>{const d=shipDate(r)||r.Delay||'';return d.startsWith(curYr);});
   const wks=[...new Set(chartF.map(r=>r.Week).filter(Boolean))].sort((a,b)=>a-b);
@@ -4204,7 +4477,7 @@ function updateCharts(gs){
 
 function updateWHTable(gs){
   if(!gs)gs=groupShipments(filtered);
-  const cntOf=r=>r.Warehouse==='VMF'?(r.Containers||r._rowCount||0):(r._containers.length||r._rowCount||0);
+  const cntOf=r=>r.Warehouse==='VMF'?(r.Containers||r._rowCount||0):((r._containers&&r._containers.length)||r._rowCount||0);
   const m={};gs.forEach(r=>{const k=r.Warehouse||'?';if(!m[k])m[k]={name:k,count:0,active:0,containers:0,docs:0,cust:0,act:0,comp:0,fincan:0};m[k].count++;if(isShipActive(r))m[k].active++;m[k].containers+=cntOf(r);if(isOK(r.Docs))m[k].docs++;if(isOK(r.CustomsRec))m[k].cust++;if(!isShipFinished(r)&&r.Status!=='Cancelled'&&!isShipDone(r))m[k].act++;if(isShipDone(r))m[k].comp++;if(isShipFinished(r)||r.Status==='Cancelled')m[k].fincan++});
   let a=Object.values(m);a.sort((x,y)=>{const v=whSort.col==='name'?x.name.localeCompare(y.name):(y[whSort.col]||0)-(x[whSort.col]||0);return v*whSort.dir});
   $('whBody').innerHTML=a.map((w,i)=>'<tr class="'+(w.active?'active-row':'')+'" ondblclick="drillWH(\''+E(w.name)+'\')" style="cursor:pointer"><td>'+(i+1)+'</td><td>'+w.name+'</td><td>'+w.count+'</td><td>'+(w.active?'<span class="badge b-active">'+w.active+'</span>':'<span class="badge b-dash">0</span>')+'</td><td>'+w.containers+'</td><td>'+P(w.docs,w.count)+'</td><td>'+P(w.cust,w.count)+'</td><td>'+P(w.act,w.count)+'</td><td>'+P(w.comp+w.fincan,w.count)+'</td><td>'+P(w.fincan,w.count)+'</td></tr>').join('')}
@@ -4302,7 +4575,7 @@ function fillContainerTypes(rows){
 function groupShipments(arr){
   const map=new Map();
   arr.forEach((r, idx) => {
-    // FMS / Caterpillar / VMF: every row is standalone — never group
+    // FMS / Terrex / VMF: every row is standalone — never group
     const key = r._isOther
       ? ('OTHER|' + idx)
       : (r.Warehouse === 'VMF')
@@ -4420,7 +4693,7 @@ const MODAL_FMS_COLS=[
   {key:'ClosedDate',lbl:'Closed Date',w:100,sort:true,fmt:'date'},
   {key:'Remarks',lbl:'Remarks',w:140,sort:true},
 ];
-const MODAL_CATERPILLAR_COLS=[
+const MODAL_Terrex_COLS=[
   {key:'Warehouse',lbl:'Warehouse',w:150,freeze:true,sort:true},
   {key:'Client',lbl:'Client',w:100,freeze:true,sort:true},
   {key:'Status',lbl:'Status',w:80,sort:true},
@@ -4466,7 +4739,7 @@ const MODAL_OUTBOUND_COLS=[
   {key:'Status',lbl:'Status',w:100,sort:true},
   {key:'Remarks',lbl:'Remarks',w:180,sort:true},
 ];
-const MODAL_OUTBOUND_COLS_CARPENTER=[
+const MODAL_OUTBOUND_COLS_Corvell=[
   {key:'Warehouse',lbl:'Warehouse',w:150,freeze:true,sort:true},
   {key:'Client',lbl:'Client',w:130,freeze:true,sort:true},
   {key:'ClientRef',lbl:'Client Ref',w:120,freeze:true,sort:true,cls:'ref-cell'},
@@ -4478,7 +4751,7 @@ const MODAL_OUTBOUND_COLS_CARPENTER=[
   {key:'Status',lbl:'Status',w:100,sort:true},
   {key:'Remarks',lbl:'Remarks',w:180,sort:true},
 ];
-const MODAL_OUTBOUND_COLS_SABIC_VINMAR=[
+const MODAL_OUTBOUND_COLS_Solvane_Vantor=[
   {key:'ModeOfTransport',lbl:'Mode of Transport',w:140,sort:true},
   {key:'Warehouse',lbl:'Warehouse',w:150,freeze:true,sort:true},
   {key:'Client',lbl:'Client',w:120,freeze:true,sort:true},
@@ -4496,7 +4769,7 @@ const MODAL_OUTBOUND_COLS_SABIC_VINMAR=[
   {key:'Status',lbl:'Status',w:100,sort:true},
   {key:'Remarks',lbl:'Remarks',w:180,sort:true},
 ];
-const MODAL_OUTBOUND_COLS_CECA=[
+const MODAL_OUTBOUND_COLS_Cerix=[
   {key:'ModeOfTransport',lbl:'Mode of Transport',w:150,sort:true},
   {key:'Warehouse',lbl:'Warehouse',w:150,freeze:true,sort:true},
   {key:'Client',lbl:'Client',w:120,freeze:true,sort:true},
@@ -4509,7 +4782,7 @@ const MODAL_OUTBOUND_COLS_CECA=[
   {key:'Status',lbl:'Status',w:100,sort:true},
   {key:'Remarks',lbl:'Remarks',w:180,sort:true},
 ];
-const MODAL_OUTBOUND_COLS_NIPPON=[
+const MODAL_OUTBOUND_COLS_Nordpac=[
   {key:'ModeOfTransport',lbl:'Mode of Transport',w:140,sort:true},
   {key:'Warehouse',lbl:'Warehouse',w:150,freeze:true,sort:true},
   {key:'Client',lbl:'Client',w:120,freeze:true,sort:true},
@@ -4529,7 +4802,7 @@ const MODAL_OUTBOUND_COLS_NIPPON=[
   {key:'Status',lbl:'Status',w:100,sort:true},
   {key:'Remarks',lbl:'Remarks',w:180,sort:true},
 ];
-const MODAL_OUTBOUND_COLS_EXPEDITOR=[
+const MODAL_OUTBOUND_COLS_Forwarder=[
   {key:'Warehouse',       lbl:'Warehouse',         w:130,freeze:true,sort:true},
   {key:'Client',          lbl:'Client',            w:120,freeze:true,sort:true},
   {key:'ClientRef',       lbl:'Client Ref',        w:160,sort:true},
@@ -4552,7 +4825,7 @@ const MODAL_OUTBOUND_COLS_ALL=[
   {key:'Status',lbl:'Status',w:80,sort:true},
   {key:'Remarks',lbl:'Remarks',w:200,sort:true},
 ];
-const MODAL_OUTBOUND_COLS_HAAS=[
+const MODAL_OUTBOUND_COLS_Hallis=[
   {key:'Warehouse',     lbl:'Warehouse',                   w:130,freeze:true,sort:true},
   {key:'Client',        lbl:'Client',                      w:120,freeze:true,sort:true},
   {key:'ItosCrn',       lbl:'ITOS Reference',              w:130,sort:true},
@@ -4572,12 +4845,12 @@ function getOutboundCols(rows){
   const clients=new Set(rows.map(r=>(r.ClientRaw||'').toLowerCase()));
   if(clients.size>1) return MODAL_OUTBOUND_COLS_ALL;
   const cl=[...clients][0];
-  if(/sabic|vinmar/.test(cl)) return MODAL_OUTBOUND_COLS_SABIC_VINMAR;
-  if(/ceca/.test(cl)) return MODAL_OUTBOUND_COLS_CECA;
-  if(/nippon/.test(cl)) return MODAL_OUTBOUND_COLS_NIPPON;
-  if(/expeditor/.test(cl)) return MODAL_OUTBOUND_COLS_EXPEDITOR;
-  if(/carpenter/.test(cl)) return MODAL_OUTBOUND_COLS_CARPENTER;
-  if(/haas/.test(cl)) return MODAL_OUTBOUND_COLS_HAAS;
+  if(/solvane|vantor/.test(cl)) return MODAL_OUTBOUND_COLS_Solvane_Vantor;
+  if(/cerix/.test(cl)) return MODAL_OUTBOUND_COLS_Cerix;
+  if(/nordpac/.test(cl)) return MODAL_OUTBOUND_COLS_Nordpac;
+  if(/forwarder/.test(cl)) return MODAL_OUTBOUND_COLS_Forwarder;
+  if(/corvell/.test(cl)) return MODAL_OUTBOUND_COLS_Corvell;
+  if(/hallis/.test(cl)) return MODAL_OUTBOUND_COLS_Hallis;
   return MODAL_OUTBOUND_COLS;
 }
 let MODAL_COLS=MODAL_CONTAINER_COLS;
@@ -4774,8 +5047,8 @@ function mCell(r,c){
   const v=c.key==='_docsDate'?(r.DateDocReceived&&r.DateDocReceived!==''?'OK':'NOK'):r[c.key];
   if(c.key==='BlNbr' && String(v||'').trim().toUpperCase()==='NA') return B('NA');
   if(c.key==='InputTms')return '<span style="color:var(--cyan);font-size:10px">'+(v||'')+'</span>';
-  if(c.key==='T1Req'||c.key==='T1Ok'){if(/dasbach/i.test(r.Client||''))return '<span style="color:var(--text-dim)">—</span>';const hv=v&&v!=='-'&&String(v).trim()!=='';return B(hv?'OK':'NOK');}
-  if(c.key==='Cofano'){return /dasbach/i.test(r.Client||'')?'<span style="color:var(--text-dim)">—</span>':(v?'<span style="color:var(--green);font-weight:600;font-size:10px">YES</span>':'<span style="color:var(--text-dim)">—</span>');}
+  if(c.key==='T1Req'||c.key==='T1Ok'){if(/dashfield/i.test(r.Client||''))return '<span style="color:var(--text-dim)">—</span>';const hv=v&&v!=='-'&&String(v).trim()!=='';return B(hv?'OK':'NOK');}
+  if(c.key==='Cofano'){return /dashfield/i.test(r.Client||'')?'<span style="color:var(--text-dim)">—</span>':(v?'<span style="color:var(--green);font-weight:600;font-size:10px">YES</span>':'<span style="color:var(--text-dim)">—</span>');}
   if(c.key==='CofanoRef'){const rv=v&&String(v).trim()&&String(v).trim()!=='-'?String(v).trim():'';return rv?'<span style="color:var(--cyan2);font-size:10px" title="'+E(rv)+'">'+rv+'</span>':'<span style="color:var(--text-dim)">—</span>';}
   if(c.key==='Release')return v==='-'?'<span style="color:var(--text-dim)">—</span>':B(v);
   if(c.key==='_docsDate'||['Docs','AN','THC','POP','CustomsReq','CustomsRec','TMS','LsSent','LoadingSlipCheck','DnPacklist','Labels','Ekotec'].includes(c.key))return B(v);
@@ -4962,7 +5235,7 @@ function openModal(title,recs){
   const _MO2=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const _fmtMo2=v=>{const[y,m]=v.split('-');return _MO2[parseInt(m)-1]+' '+y;};
   const wS=[...new Set(recs.map(r=>r.Warehouse).filter(Boolean))].sort();
-  const cS=[...new Set(recs.map(r=>r.Client).filter(Boolean))].filter(c=>c.trim().toLowerCase()!=='expeditors').sort();
+  const cS=[...new Set(recs.map(r=>r.Client).filter(Boolean))].filter(c=>c.trim().toLowerCase()!=='forwarders').sort();
   const moS=[...new Set(recs.map(r=>{const d=shipDate(r);return d?d.substring(0,7):null;}).filter(Boolean))].sort();
   MODAL_MS_STATE.mfWH = new Set(MS_STATE.fWH);
   MODAL_MS_STATE.mfClient = new Set(MS_STATE.fClient);
@@ -4988,11 +5261,11 @@ function openModal(title,recs){
 }
 function updMS(r){
   if(activeType==='outbound'){$('modalStats').innerHTML='<span class="mstat"><b>'+r.length.toLocaleString()+'</b> orders</span><span class="mstat">Clients: <b>'+new Set(r.map(x=>x.Client)).size+'</b></span><span class="mstat">Warehouses: <b>'+new Set(r.map(x=>x.Warehouse)).size+'</b></span>';return;}
-  const sts=MODAL_MS_STATE.mfStatus;const allRows=r.flatMap(x=>x._rows||[x]);const cntRows=sts&&sts.size>0?allRows.filter(x=>[...sts].some(st=>{if(st==='Active')return x.Status==='Active';if(st==='Finished')return x.Status==='Finished';if(st==='Completed')return x.Status==='Completed';if(st==='Cancelled')return x.Status==='Cancelled';if(st==='Ready for empty')return x.TransportBy!=='External'&&isOK(x.VolAf)&&!isOK(x.LeegIn);if(st==='Ready for pickup')return x.TransportBy!=='External'&&isOK(x.TMS)&&!isOK(x.VolAf);if(st==='TMS ok')return x.TransportBy!=='External'&&isOK(x.TMS);return x.Status===st;})):allRows;$('modalStats').innerHTML='<span class="mstat"><b>'+r.length.toLocaleString()+'</b> shipments</span><span class="mstat">Containers: <b>'+cntRows.length.toLocaleString()+'</b></span><span class="mstat">Warehouses: <b>'+new Set(allRows.map(x=>x.Warehouse).filter(Boolean)).size+'</b></span><span class="mstat">Clients: <b>'+new Set(allRows.map(x=>x.Client).filter(c=>c&&c.toLowerCase()!=='expeditors')).size+'</b></span>'}
+  const sts=MODAL_MS_STATE.mfStatus;const allRows=r.flatMap(x=>x._rows||[x]);const cntRows=sts&&sts.size>0?allRows.filter(x=>[...sts].some(st=>{if(st==='Active')return x.Status==='Active';if(st==='Finished')return x.Status==='Finished';if(st==='Completed')return x.Status==='Completed';if(st==='Cancelled')return x.Status==='Cancelled';if(st==='Ready for empty')return x.TransportBy!=='External'&&isOK(x.VolAf)&&!isOK(x.LeegIn);if(st==='Ready for pickup')return x.TransportBy!=='External'&&isOK(x.TMS)&&!isOK(x.VolAf);if(st==='TMS ok')return x.TransportBy!=='External'&&isOK(x.TMS);return x.Status===st;})):allRows;$('modalStats').innerHTML='<span class="mstat"><b>'+r.length.toLocaleString()+'</b> shipments</span><span class="mstat">Containers: <b>'+cntRows.length.toLocaleString()+'</b></span><span class="mstat">Warehouses: <b>'+new Set(allRows.map(x=>x.Warehouse).filter(Boolean)).size+'</b></span><span class="mstat">Clients: <b>'+new Set(allRows.map(x=>x.Client).filter(c=>c&&c.toLowerCase()!=='forwarders')).size+'</b></span>'}
 function onMfWHChange(){
   const whs=MODAL_MS_STATE.mfWH;
   const src=whs.size>0?modalRecs.filter(r=>whs.has(r.Warehouse)):modalRecs;
-  const cS=[...new Set(src.map(r=>r.Client).filter(Boolean))].filter(c=>c.trim().toLowerCase()!=='expeditors').sort();
+  const cS=[...new Set(src.map(r=>r.Client).filter(Boolean))].filter(c=>c.trim().toLowerCase()!=='forwarders').sort();
   modalMsRenderOpts('mfClient', cS);
 
   const validClients=new Set(cS);
@@ -5004,7 +5277,7 @@ function onMfWHChange(){
 function onCfWHChange(){
   const whs=MODAL_MS_STATE.cfWH;
   const src=whs.size>0?ctrOrigRecs.filter(r=>whs.has(r.Warehouse)):ctrOrigRecs;
-  const cS=[...new Set(src.map(r=>r.Client).filter(Boolean))].filter(c=>c.trim().toLowerCase()!=='expeditors').sort();
+  const cS=[...new Set(src.map(r=>r.Client).filter(Boolean))].filter(c=>c.trim().toLowerCase()!=='forwarders').sort();
   modalMsRenderOpts('cfClient', cS);
 
   const validClients=new Set(cS);
@@ -5014,7 +5287,7 @@ function onCfWHChange(){
   applyCtrF();
 }
 function syncDepotInCol(){
-  const allCF=modalFiltered.length>0&&modalFiltered.every(r=>/cortevafr/i.test(String(r.Client||'').toLowerCase().replace(/[\s\-]/g,'')));
+  const allCF=modalFiltered.length>0&&modalFiltered.every(r=>/cortanefr/i.test(String(r.Client||'').toLowerCase().replace(/[\s\-]/g,'')));
   const hasIt=MODAL_COLS.some(c=>c.key==='DepotIn');
   if(allCF&&!hasIt){
     const whIdx=MODAL_COLS.findIndex(c=>c.key==='Warehouse');
@@ -5106,7 +5379,7 @@ function drillModal(type){
     openAllContainersModal('🚢 All Containers ('+filtered.length+')',filtered);return;
   }
   else if(type==='warehouses'){recs=gs;title='🏭 Warehouses ('+new Set(gs.map(r=>r.Warehouse)).size+')'}
-  else if(type==='clients'){recs=gs;title='👥 Clients ('+new Set(gs.map(r=>r.Client).filter(c=>c && c.toLowerCase()!=='expeditors')).size+')'}
+  else if(type==='clients'){recs=gs;title='👥 Clients ('+new Set(gs.map(r=>r.Client).filter(c=>c && c.toLowerCase()!=='forwarders')).size+')'}
   else if(type==='docs_ok'){recs=gs.filter(r=>isOK(r.Docs));title='✅ Docs OK ('+recs.length+' shipments)'}
   else if(type==='vol_af'){recs=gs.filter(r=>hasDate(r.VolAf));title='📅 VOL AF ('+recs.length+' shipments)'}
   else if(type==='leeg_klaar'){recs=gs.filter(r=>hasDate(r.LeegKlaar));title='📅 Leeg klaar ('+recs.length+' shipments)'}
@@ -5130,7 +5403,7 @@ function openAllContainersModal(title,recs){
   const gs=groupShipments(recs);
   const ships=gs.length;
   const whs=new Set(recs.map(r=>r.Warehouse).filter(Boolean)).size;
-  const cls=new Set(recs.map(r=>r.Client).filter(c=>c&&c.toLowerCase()!=='expeditors')).size;
+  const cls=new Set(recs.map(r=>r.Client).filter(c=>c&&c.toLowerCase()!=='forwarders')).size;
   _openCtrModal(title,
     '<span class="mstat">Total Containers: <b>'+recs.length+'</b></span><span class="mstat">Shipments: <b>'+ships+'</b></span><span class="mstat">Warehouses: <b>'+whs+'</b></span><span class="mstat">Clients: <b>'+cls+'</b></span>',
     recs);
@@ -5138,7 +5411,7 @@ function openAllContainersModal(title,recs){
 
 function openOutboundOrdersModal(title,recs){
   const whs=new Set(recs.map(r=>r.Warehouse).filter(Boolean)).size;
-  const cls=new Set(recs.map(r=>r.Client).filter(c=>c&&c.toLowerCase()!=='expeditors')).size;
+  const cls=new Set(recs.map(r=>r.Client).filter(c=>c&&c.toLowerCase()!=='forwarders')).size;
   _openCtrModal(title,
     '<span class="mstat">Total Orders: <b>'+recs.length+'</b></span><span class="mstat">Warehouses: <b>'+whs+'</b></span><span class="mstat">Clients: <b>'+cls+'</b></span>',
     recs);
@@ -5204,7 +5477,7 @@ const THEME_MOON_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="no
 })();
 // Init multi-select option lists from static data
 msRenderOpts('fWH',DEFAULT_WHS);
-msRenderOpts('fClient',["ASCENSUS","AXIA","Albemarle Bulk","Albemarle Packed","Albemarle/Ketjen Bulk","Ascensus ISO Tank","BASF Agro","BDP","Boschmans Steinacher","Braskem","Braskem PIB","Bridge Polymers","CARPENTER","Corteva CH","Caterpillar","Ceca","Chemours","Chevron","Continental","Corteva FR","DL Chemicals","Dasbach","De Rijke","EDF","Emvia","Esvama","Evonik","FMS","Fuji","Haas","Hakotrans","Hansa Levant Line","Hanwha Bulk","Hanwha Total","Hyosung Chemical","IMEC","Italmatch","K+N","Karl Gross","Ketjen Bulk","Ketjen Packed","Lanxess","MFCI","Manuchar","Meiko","Meraxis","Nippon","Nissan JP","Oleon","Prime","PSA","Prakash","Prayon","Purelife","Puretech","Rhenus","Sabic","Sealogis","Sebang","Solenis","Staudemaier","Sumitomo","Swiss Polymers","Tegral","TPL","Taewoong","Tricon","U-Tube","Trinseo","Trinasolar","UPL","UPL - Arysta","Yusen","Yusen Servaes 650"].map(formatClientName));
+msRenderOpts('fClient',["Ardent","Axira","Alderan Bulk","Alderan Packed","Alderan/Kestrel Bulk","Ardent ISO Tank","Balvor Agro","BKL","Bosmere Steiner","Brakon","Brakon PIB","Bridgeway Polymers","Corvell","Cortane CH","Terrex","Cerix","Chemora","Chevlin","Contivia","Cortane FR","Delta Chemicals","Dashfield","De Ridder","EVF","Envira","Esmara","Evolen","FMS","Fujin","Hallis","Hakofreight","Halden Levant Line","Hanvale Bulk","Hanvale Total","Hyolan Chemical","IMEK","Italvero","R+L","Karl Brenner","Kestrel Bulk","Kestrel Packed","Lanvex","MFTI","Manucor","Meiro","Meravis","Nordpac","Nisaro JP","Oleva","Primeco","PSV","Prakar","Prayel","Purevia","Puretide","Rhenvale","Solvane","Sealink","Sebrin","Solenta","Staudinger","Sumira","Summit Polymers","Tegrin","TPX","Taeyang","Trivon","U-Flow","Trinora","Trinasun","UXL","UXL - Aristo","Yukon","Yukon Harbourside 650"].map(formatClientName));
 msRenderOpts('fShippingLine',["ACL","CMA CGM","COSCO","Evergreen","Hapag-Lloyd","HMM","ICL","Maersk","MSC","ONE","OOCL","SCI","Yang Ming"]);
 msRenderOpts('fStatus',["Active","Completed","Finished","Cancelled","Ready for empty","Ready for pickup","TMS ok"]);
 msRenderOpts('fWeek',[],v=>'Week '+v);
@@ -5319,17 +5592,17 @@ function switchTab(tab){
     var navVAu12=document.getElementById('navVAu12');
     if(navVAu12) navVAu12.classList.add('active');
     var fr=document.getElementById('vaFrame');
-    if(fr){var cs=fr.getAttribute('src')||'';if(cs===''||cs.indexOf('va-sabic')>=0){fr.src='/va';}}
-  }else if(tab==='va-sabic'){
+    if(fr){var cs=fr.getAttribute('src')||'';if(cs===''||cs.indexOf('unit=2')>=0){fr.src='/va?unit=1';}}
+  }else if(tab==='va-unit2'){
     document.getElementById('tabVA').classList.add('active');
     var navVA2=document.getElementById('navVA');
     if(navVA2) navVA2.classList.add('active');
     if(navDash) navDash.classList.remove('active');
     document.querySelectorAll('#navSubVA .nav-item').forEach(function(n){n.classList.remove('active');});
-    var navVASabic=document.getElementById('navVASabic');
-    if(navVASabic) navVASabic.classList.add('active');
+    var navVAUnit2=document.getElementById('navVAUnit2');
+    if(navVAUnit2) navVAUnit2.classList.add('active');
     var fr2=document.getElementById('vaFrame');
-    if(fr2) fr2.src='/va-sabic';
+    if(fr2) fr2.src='/va?unit=2';
   }else if(tab==='fieldMap'){
     document.getElementById('tabFieldMap').classList.add('active');
     var navFM=document.getElementById('navFieldMap');
@@ -5359,100 +5632,100 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeO
 // ── Warehouse-type sheets: the warehouse IS the sheet (has a Client column inside)
 // Key = warehouse name = CLIENT_CONFIG key
 const WH_SHEET_MAP = {
-  'Blauwhoef':  'Blauwhoef',
-  'Ecowell':    'Ecowell',
+  'Bluegate':  'Bluegate',
+  'Greenfield':    'Greenfield',
   'Forwarding': 'Forwarding',
-  'Schomhoeve': 'Schomhoeve',
+  'Southfarm': 'Southfarm',
   'VMF':        'VMF',
 };
 
 // ── Client-type sheets: each client has its own dedicated sheet
 // Maps warehouse → { clientDisplayName → CLIENT_CONFIG key }
 const CLIENT_SHEET_MAP = {
-  'Grobbendonk': {
-    'Trinasolar': 'Trinasolar',
-    'BDP':        'BDP',
-    'Manuchar':   'ManucharGrobbendonk',
+  'Eastfield': {
+    'Trinasun': 'Trinasun',
+    'BKL':        'BKL',
+    'Manucor':   'ManucorEastfield',
   },
-  'Kalishoek - Kaai 1793': {
-    'Sabic':        'Sabic',
-    'Braskem':      'Braskem',
-    'BYD - Sinotrans': 'BYD',
-    'Borsodchem':   'Borsodchem',
-    'Hanwha Bulk':  'HanwhaBulk',
-    'Tegral':       'Vinmar',
-    'Axia':         'Vinmar',
-    'Prime':        'Vinmar',
+  'Northpoint - Quay 1793': {
+    'Solvane':        'Solvane',
+    'Brakon':      'Brakon',
+    'Bayline - Sinoport': 'Bayline',
+    'Borsavex':   'Borsavex',
+    'Hanvale Bulk':  'HanvaleBulk',
+    'Tegrin':       'Vantor',
+    'Axira':         'Vantor',
+    'Primeco':        'Vantor',
   },
-  'Brasil - Kaai 1054': {
-    'Ceca':              'Ceca',
-    'K+N':               'KN',
-    'Nippon':            'Nippon',
-    'Chevron':           'Chevron',
+  'Riverside - Quay 1054': {
+    'Cerix':              'Cerix',
+    'R+L':               'RL',
+    'Nordpac':            'Nordpac',
+    'Chevlin':           'Chevlin',
   },
-  'Cleaning - Kaai 1054': {
-    'Albemarle Europe Sea':  'AlbemarleEuropeSea',
-    'Albemarle Europe Road': 'AlbemarleEuropeRoad',
-    'Albemarle Germany': 'AlbemarleGermanySea',
-    'Ketjen Bulk':       'KetjenBulkSea',
-    'Chevron':           'Chevron',
+  'Cleaning - Quay 1054': {
+    'Alderan Europe Sea':  'AlderanEuropeSea',
+    'Alderan Europe Road': 'AlderanEuropeRoad',
+    'Alderan Germany': 'AlderanGermanySea',
+    'Kestrel Bulk':       'KestrelBulkSea',
+    'Chevlin':           'Chevlin',
   },
-  'NNRC - KAAI 660': {
-    'Bridge Polymers':  'BridgePolymers',
-    'Continental':      'Continental',
-    'DL Chemicals':     'DLChemicals',
-    'Emvia':            'Emvia',
-    'Esvama':           'Esvama',
-    'Hanwha Total':     'HanwhaTotal',
-    'Hyosung Chemical': 'HyosungChemical',
-    'Manuchar':         'Manuchar',
-    'Meraxis':          'Meraxis',
-    'Swiss Polymers':   'SwissPolymers',
-    'Taewoong':         'Taewoong',
-    'Tricon':           'Tricon',
-    'U-Tube':           'UTube',
+  'Central - Quay 660': {
+    'Bridgeway Polymers':  'BridgewayPolymers',
+    'Contivia':      'Contivia',
+    'Delta Chemicals':     'DeltaChemicals',
+    'Envira':            'Envira',
+    'Esmara':           'Esmara',
+    'Hanvale Total':     'HanvaleTotal',
+    'Hyolan Chemical': 'HyolanChemical',
+    'Manucor':         'Manucor',
+    'Meravis':          'Meravis',
+    'Summit Polymers':   'SummitPolymers',
+    'Taeyang':         'Taeyang',
+    'Trivon':           'Trivon',
+    'U-Flow':           'UFlow',
   },
-  'Hazop - Kaai 1167': {
-    'Fuji':   'Fuji',
-    'Sebang': 'Sebang',
+  'Hazmat - Quay 1167': {
+    'Fujin':   'Fujin',
+    'Sebrin': 'Sebrin',
   },
-  'Oudendijk - Kaai 1994': {
-    'BASF Agro':        'BASFAgro',
-    'CARPENTER':        'Carpenter',
-    'Haas':             'Haas',
-    'Remant':           'HansaLevantLine',
-    'Sealogis':         'Sealogis',
+  'Westdyke - Quay 1994': {
+    'Balvor Agro':        'BalvorAgro',
+    'Corvell':        'Corvell',
+    'Hallis':             'Hallis',
+    'Remar':           'HaldenLevantLine',
+    'Sealink':         'Sealink',
   },
-  'Ecowell': {
-    'Albemarle Packed': 'AlbemarlePackedEcowell',
-    'Ketjen Packed':    'KetjenPackedEcowell',
+  'Greenfield': {
+    'Alderan Packed': 'AlderanPackedGreenfield',
+    'Kestrel Packed':    'KestrelPackedGreenfield',
   },
-  'VMR - Kaai 1143': {
-    'EDF':            'EDF',
-    'TPL':            'TPL',
-    'Purelife':       'Purelife',
-    'Sabic':          'Sabic',
-    'Sun Valley Rice':'SunValleyRice',
+  'Portside - Quay 1143': {
+    'EVF':            'EVF',
+    'TPX':            'TPX',
+    'Purevia':       'Purevia',
+    'Solvane':          'Solvane',
+    'Sunfield Rice':'SunfieldRice',
   },
-  'Servaes 650': {
-    'ASCENSUS':             'Ascensus',
-    'PSA':                  'PSA',
-    'Boschmans Steinacher': 'BoschmansSteinacher',
-    'Rhenus':               'RhenusServaes650',
-    'Yusen Servaes 650':    'YusenServaes650',
-    'Vesta Chemicals':      'VestaChemicals',
+  'Harbourside 650': {
+    'Ardent':             'Ardent',
+    'PSV':                  'PSV',
+    'Bosmere Steiner': 'BosmereSteiner',
+    'Rhenvale':               'RhenvaleHarbourside650',
+    'Yukon Harbourside 650':    'YukonHarbourside650',
+    'Vestra Chemicals':      'VestraChemicals',
   },
   'Depot 650': {
-    'Corteva FR':           'CortevaFR',
-    'Ascensus ISO Tank':    'AscensusIsoTank',
+    'Cortane FR':           'CortaneFR',
+    'Ardent ISO Tank':    'ArdentIsoTank',
   },
-  'VMR - Kaai 1147': {
-    'Emvia':       'EmviaVMR1147',
-    'Rhenus':      'RhenusVMR1147',
-    'Karl Gross':   'VMR1147',
-    'Hakotrans':   'VMR1147',
-    'Dasbach':     'VMR1147',
-    'Staudemaier': 'VMR1147',
+  'Portside - Quay 1147': {
+    'Envira':       'EnviraPortside1147',
+    'Rhenvale':      'RhenvalePortside1147',
+    'Karl Brenner':   'Portside1147',
+    'Hakofreight':   'Portside1147',
+    'Dashfield':     'Portside1147',
+    'Staudinger': 'Portside1147',
   },
 };
 
@@ -5469,23 +5742,23 @@ function resolveConfigKey(wh, client){
 
 // =====================================================================
 const WH_CLIENT_MAP = {
-  "Blauwhoef":              ["Chemours","Italmatch","Evonik","Puretech","ASCENSUS","De Rijke","Sumitomo","Prayon"],
-  "Brasil - Kaai 1054":     ["Ceca","K+N","Nippon","Chevron"],
-  "Cleaning - Kaai 1054":   ["Albemarle Europe Sea","Albemarle Europe Road","Albemarle Germany","Ketjen Bulk","Lanxess","Chevron"],
-  "Filling 1054":           ["Chevron"],
-  "Ecowell":                ["Albemarle Packed","Ketjen Packed","Albemarle/Ketjen Bulk","Corteva CH","Nissan JP","Braskem PIB","UPL","UPL - Arysta","Oleon","Yusen"],
-  "Forwarding":             ["IMEC","Meiko","Prakash","Trinseo","Purelife"],
-  "Grobbendonk":            ["Trinasolar","BDP","Manuchar"],
-  "Hazop - Kaai 1167":      ["Fuji","Sebang"],
-  "Kalishoek - Kaai 1793":  ["Braskem","Borsodchem","BYD - Sinotrans","Hanwha Bulk","Sabic","Tegral","Axia","Prime"],
-  "NNRC - KAAI 660":        ["Bridge Polymers","Continental","DL Chemicals","Emvia","Esvama","Hanwha Total","Hyosung Chemical","Manuchar","Meraxis","Swiss Polymers","Taewoong","Tricon","U-Tube"],
-  "Oudendijk - Kaai 1994":  ["BASF Agro","CARPENTER","Haas","Remant","Sealogis"],
-  "Schomhoeve":             ["MFCI","Solenis","Sabic","Chevron"],
-  "Servaes 650": ["ASCENSUS","PSA","Boschmans Steinacher","Rhenus","Yusen Servaes 650","Vesta Chemicals"],
-  "Depot 650":   ["Ascensus ISO Tank","Corteva FR"],
-  "VMR - Kaai 1143":        ["EDF","TPL","Purelife","Sabic","Sun Valley Rice"],
+  "Bluegate":              ["Chemora","Italvero","Evolen","Puretide","Ardent","De Ridder","Sumira","Prayel"],
+  "Riverside - Quay 1054":     ["Cerix","R+L","Nordpac","Chevlin"],
+  "Cleaning - Quay 1054":   ["Alderan Europe Sea","Alderan Europe Road","Alderan Germany","Kestrel Bulk","Lanvex","Chevlin"],
+  "Filling 1054":           ["Chevlin"],
+  "Greenfield":                ["Alderan Packed","Kestrel Packed","Alderan/Kestrel Bulk","Cortane CH","Nisaro JP","Brakon PIB","UXL","UXL - Aristo","Oleva","Yukon"],
+  "Forwarding":             ["IMEK","Meiro","Prakar","Trinora","Purevia"],
+  "Eastfield":            ["Trinasun","BKL","Manucor"],
+  "Hazmat - Quay 1167":      ["Fujin","Sebrin"],
+  "Northpoint - Quay 1793":  ["Brakon","Borsavex","Bayline - Sinoport","Hanvale Bulk","Solvane","Tegrin","Axira","Primeco"],
+  "Central - Quay 660":        ["Bridgeway Polymers","Contivia","Delta Chemicals","Envira","Esmara","Hanvale Total","Hyolan Chemical","Manucor","Meravis","Summit Polymers","Taeyang","Trivon","U-Flow"],
+  "Westdyke - Quay 1994":  ["Balvor Agro","Corvell","Hallis","Remar","Sealink"],
+  "Southfarm":             ["MFTI","Solenta","Solvane","Chevlin"],
+  "Harbourside 650": ["Ardent","PSV","Bosmere Steiner","Rhenvale","Yukon Harbourside 650","Vestra Chemicals"],
+  "Depot 650":   ["Ardent ISO Tank","Cortane FR"],
+  "Portside - Quay 1143":        ["EVF","TPX","Purevia","Solvane","Sunfield Rice"],
   "VMF":                    [],
-  "VMR - Kaai 1147":        ["Emvia","Rhenus","Karl Gross","Hakotrans","Dasbach","Staudemaier"]
+  "Portside - Quay 1147":        ["Envira","Rhenvale","Karl Brenner","Hakofreight","Dashfield","Staudinger"]
 };
 
 // ── Outbound maps ────────────────────────────────────────────────────────────
@@ -5494,13 +5767,13 @@ const WH_SHEET_MAP_OUTBOUND = {
 };
 
 const WH_CLIENT_MAP_OUTBOUND = {
-  'Brasil - Kaai 1054':    ['Ceca', 'Nippon 1', 'Nippon 2'],
-  'Cleaning - Kaai 1054':  ['Albemarle Europe (Road)', 'Albemarle Europe (Sea)', 'Albemarle Germany (Road)', 'Albemarle Germany (Sea)', 'Ketjen (Road)', 'Ketjen (Sea)'],
+  'Riverside - Quay 1054':    ['Cerix', 'Nordpac 1', 'Nordpac 2'],
+  'Cleaning - Quay 1054':  ['Alderan Europe (Road)', 'Alderan Europe (Sea)', 'Alderan Germany (Road)', 'Alderan Germany (Sea)', 'Kestrel (Road)', 'Kestrel (Sea)'],
   'Forwarding':            [],
-  'Kalishoek - Kaai 1793': ['Sabic', 'Tegral/Axia', 'Hanwha Bulk'],
-  'NNRC - KAAI 660':       [],
-  'Oudendijk - Kaai 1994': ['Carpenter', 'Haas'],
-  'Van Moer Stevedoring':  ['Caterpillar'],
+  'Northpoint - Quay 1793': ['Solvane', 'Tegrin/Axira', 'Hanvale Bulk'],
+  'Central - Quay 660':       [],
+  'Westdyke - Quay 1994': ['Corvell', 'Hallis'],
+  'Portside Stevedoring':  ['Terrex'],
 };
 
 for (const wh in WH_CLIENT_MAP) {
@@ -5509,36 +5782,36 @@ for (const wh in WH_CLIENT_MAP) {
 for (const wh in WH_CLIENT_MAP_OUTBOUND) {
   WH_CLIENT_MAP_OUTBOUND[wh] = WH_CLIENT_MAP_OUTBOUND[wh].map(formatClientName);
 }
-const DEFAULT_OB_CLIENTS = ['Ceca', 'Nippon 1', 'Nippon 2', 'Sabic', 'Tegral/Axia', 'Hanwha Bulk', 'Carpenter', 'Haas'].map(formatClientName);
+const DEFAULT_OB_CLIENTS = ['Cerix', 'Nordpac 1', 'Nordpac 2', 'Solvane', 'Tegrin/Axira', 'Hanvale Bulk', 'Corvell', 'Hallis'].map(formatClientName);
 
 const CLIENT_SHEET_MAP_OUTBOUND = {
-  'Brasil - Kaai 1054': {
-    'Ceca':           'CecaOutbound',
-    'Nippon 1':       'NipponAxeOutbound',
-    'Nippon 2':       'Nippon2AxeOutbound',
+  'Riverside - Quay 1054': {
+    'Cerix':           'CerixOutbound',
+    'Nordpac 1':       'NordpacAxeOutbound',
+    'Nordpac 2':       'Nordpac2AxeOutbound',
   },
-  'Cleaning - Kaai 1054': {
-    'Albemarle Europe (Road)':  'AlbEuropeRoadOutbound',
-    'Albemarle Europe (Sea)':   'AlbEuropeSeaOutbound',
-    'Albemarle Germany (Road)': 'AlbGermanyRoadOutbound',
-    'Albemarle Germany (Sea)':  'AlbGermanySeaOutbound',
-    'Ketjen (Road)':            'KetjenRoadOutbound',
-    'Ketjen (Sea)':             'KetjenSeaOutbound',
+  'Cleaning - Quay 1054': {
+    'Alderan Europe (Road)':  'AlbEuropeRoadOutbound',
+    'Alderan Europe (Sea)':   'AlbEuropeSeaOutbound',
+    'Alderan Germany (Road)': 'AlbGermanyRoadOutbound',
+    'Alderan Germany (Sea)':  'AlbGermanySeaOutbound',
+    'Kestrel (Road)':            'KestrelRoadOutbound',
+    'Kestrel (Sea)':             'KestrelSeaOutbound',
   },
-  'Kalishoek - Kaai 1793': {
-    'Sabic':        'SabicOutbound',
-    'Tegral/Axia':  'VinmarOutbound',
-    'Hanwha Bulk':  'HanwhaBulkOutbound',
+  'Northpoint - Quay 1793': {
+    'Solvane':        'SolvaneOutbound',
+    'Tegrin/Axira':  'VantorOutbound',
+    'Hanvale Bulk':  'HanvaleBulkOutbound',
   },
-  'NNRC - KAAI 660': {
+  'Central - Quay 660': {
   },
-  'Oudendijk - Kaai 1994': {
-    'Carpenter':   'CarpenterOutbound',
-    'Expeditors':  'ExpeditorOutbound',
-    'Haas':        'HaasOutbound',
+  'Westdyke - Quay 1994': {
+    'Corvell':   'CorvellOutbound',
+    'Forwarders':  'ForwarderOutbound',
+    'Hallis':        'HallisOutbound',
   },
-  'Van Moer Stevedoring': {
-    'Caterpillar': 'CaterpillarOutbound',
+  'Portside Stevedoring': {
+    'Terrex': 'TerrexOutbound',
   },
 };
 
@@ -5602,7 +5875,7 @@ function normaliseSL(raw){
 
 // Warehouse-type sheets: one sheet covers ALL clients for that warehouse.
 // Their client lists come from the synced DB data, NOT from WH_CLIENT_MAP.
-const WH_DATA_ONLY = new Set(['Blauwhoef','Schomhoeve','Ecowell','VMR - Kaai 1143','VMR - Kaai 1147','VMF']);
+const WH_DATA_ONLY = new Set(['Bluegate','Southfarm','Greenfield','Portside - Quay 1143','Portside - Quay 1147','VMF']);
 
 // Update client dropdown when warehouse changes
 function onWHChange(){
@@ -5635,11 +5908,11 @@ function onWHChange(){
 }
 
 function rebuildClientSelect(clients){
-  const ALL_CLIENTS=["ASCENSUS","AXIA","Albemarle Bulk","Albemarle Packed","Albemarle/Ketjen Bulk","Ascensus ISO Tank","BASF Agro","BDP","Boschmans Steinacher","Braskem","Braskem PIB","Bridge Polymers","CARPENTER","Corteva CH","Caterpillar","Ceca","Chemours","Chevron","Continental","Corteva FR","DL Chemicals","Dasbach","De Rijke","EDF","Emvia","Esvama","Evonik","FMS","Fuji","Haas","Hakotrans","Hansa Levant Line","Hanwha Total","Hyosung Chemical","IMEC","Italmatch","K+N","Karl Gross","Ketjen Bulk","Ketjen Packed","Lanxess","MFCI","Manuchar","Meiko","Meraxis","Nippon","Nissan JP","Oleon","Prime","PSA","Prakash","Prayon","Purelife","Puretech","Rhenus","Sabic","Sealogis","Sebang","Solenis","Staudemaier","Sumitomo","Swiss Polymers","Tegral","TPL","Taewoong","Tricon","U-Tube","Trinseo","UPL","UPL - Arysta","Yusen","Yusen Servaes 650"];
+  const ALL_CLIENTS=["Ardent","Axira","Alderan Bulk","Alderan Packed","Alderan/Kestrel Bulk","Ardent ISO Tank","Balvor Agro","BKL","Bosmere Steiner","Brakon","Brakon PIB","Bridgeway Polymers","Corvell","Cortane CH","Terrex","Cerix","Chemora","Chevlin","Contivia","Cortane FR","Delta Chemicals","Dashfield","De Ridder","EVF","Envira","Esmara","Evolen","FMS","Fujin","Hallis","Hakofreight","Halden Levant Line","Hanvale Total","Hyolan Chemical","IMEK","Italvero","R+L","Karl Brenner","Kestrel Bulk","Kestrel Packed","Lanvex","MFTI","Manucor","Meiro","Meravis","Nordpac","Nisaro JP","Oleva","Primeco","PSV","Prakar","Prayel","Purevia","Puretide","Rhenvale","Solvane","Sealink","Sebrin","Solenta","Staudinger","Sumira","Summit Polymers","Tegrin","TPX","Taeyang","Trivon","U-Flow","Trinora","UXL","UXL - Aristo","Yukon","Yukon Harbourside 650"];
   
   if (clients) {
     // If a specific list of clients is provided (from onWHChange), show ONLY those.
-    msRenderOpts('fClient', [...new Set(clients)].filter(c=>c.trim().toLowerCase()!=='expeditors').sort());
+    msRenderOpts('fClient', [...new Set(clients)].filter(c=>c.trim().toLowerCase()!=='forwarders').sort());
   } else {
     // If no specific clients (no warehouse selected), show the fallback master list
     // PLUS any clients currently found in the data.
@@ -5658,7 +5931,7 @@ function rebuildClientSelect(clients){
         if(r.Warehouse==='VMF') return false;
         if(_rWH&&!_rWH.some(w=>w.toLowerCase()===(r.Warehouse||'').toLowerCase())) return false;
         return true;
-      }).map(r => r.Client).filter(Boolean))].filter(c=>c.trim().toLowerCase()!=='expeditors') : [];
+      }).map(r => r.Client).filter(Boolean))].filter(c=>c.trim().toLowerCase()!=='forwarders') : [];
       msRenderOpts('fClient', [...new Set(dataClients)].sort());
     }
   }
@@ -7393,7 +7666,12 @@ function _loadEntrySheet(configKey, frame, iph){
   fetch(PG_API+'/sheet-info?client=' + encodeURIComponent(configKey))
     .then(function(r){ return r.json(); })
     .then(function(d){
-      if(d.ok){
+      if(d.ok && d.demo){
+        frame.removeAttribute('src');
+        frame.srcdoc = demoSheetHtml(configKey);
+        frame.style.display = 'block';
+        if(iph) iph.style.display = 'none';
+      } else if(d.ok){
         frame.src = d.editUrl;
         frame.style.display = 'block';
         if(iph) iph.style.display = 'none';
@@ -7404,6 +7682,100 @@ function _loadEntrySheet(configKey, frame, iph){
           }
       }
     });
+}
+
+// ── Demo sheet view ─────────────────────────────────────────────────────────
+// In production the CT Entry screen embeds the client's Google Sheet. In the demo
+// it renders an editable sheet of the same records; edits are saved to the demo
+// data store and the dashboards refresh from it.
+var DEMO_SHEET_COLS = {
+  inbound: [
+    ['Status','Status',70,['Active','Completed','Finished','Cancelled']],['ItosBoltrics','WMS Ref',92],['ClientRef','Client Ref',100],['BlNbr','BL Number',120],
+    ['ContainerNbr','Container',104],['ContainerType','Type',52],['Vessel','Vessel',130],['ShippingLine','Line',86],['ETA','ETA',84],['ATA','ATA',84],
+    ['DateDocReceived','Docs Rcv',84],['Docs','Docs',48,['OK','NOK']],['AN','AN',44,['OK','NOK','-']],['THC','THC',44,['OK','NOK','-']],
+    ['CustomsReq','Cust Req',58,['OK','NOK']],['CustomsRec','Cust Rec',58,['OK','NOK','-']],['Release','Release',56,['OK','NOK','-']],
+    ['Fnr','F-Number',80],['InputTms','TMS Order',86],['VolAf','Full Out',84],['LeegIn','Empty In',84],['Remarks','Remarks',220]
+  ],
+  outbound: [
+    ['status','Status',70,['Active','Finished','Cancelled']],['client_ref','Order Ref',96],['loading_date','Loading',84],['eld','ELD',84],
+    ['mode_of_transport','Mode',72,['Truck','Container']],['destination_code','Dest',44],['company_destination','Consignee',170],['eu_non_eu','EU',60,['EU','NON-EU']],
+    ['net_weight','Net kg',64],['amount_of_colli','Colli',44],['customs_req','Cust Req',84],['customs_rec','Cust Rec',84],['loading_slip_sent','LS Sent',84],
+    ['itos_creation','WMS Closed',84],['license_plates','Plate',90],['outbound_customs_doc_nbr','Export MRN',150],['remarks','Remarks',200]
+  ]
+};
+function _demoSheetCtx(configKey){
+  var opType = getEntryOpType();
+  var wh = document.getElementById('entryWarehouse').value;
+  var client = document.getElementById('entryClient').value;
+  var table = opType === 'outbound' ? 'outbound_shipments' : 'shipments';
+  var all = (window.__demoDB ? window.__demoDB.getTable(table) : []);
+  var rows = all.filter(function(r){
+    if(opType === 'outbound') return (r.warehouse||'') === wh && (r.client||'') === configKey;
+    return (r.Warehouse||'').toLowerCase() === wh.toLowerCase() && (r.Client||'').toLowerCase() === (client||'').toLowerCase();
+  });
+  var dk = opType === 'outbound' ? 'loading_date' : 'ETA';
+  rows.sort(function(a,b){ return String(b[dk]||'').localeCompare(String(a[dk]||'')); });
+  return { opType: opType, wh: wh, client: client, table: table, rows: rows, cols: DEMO_SHEET_COLS[opType] };
+}
+function demoSheetHtml(configKey){
+  var c = _demoSheetCtx(configKey);
+  window._demoSheetKey = configKey;
+  var night = document.body.classList.contains('night');
+  var esc = function(v){ return String(v==null?'':v).replace(/[&<>"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];}); };
+  var head = '<tr><th class="rn">#</th>' + c.cols.map(function(col){ return '<th style="min-width:'+col[2]+'px">'+esc(col[1])+'</th>'; }).join('') + '</tr>';
+  var body = c.rows.map(function(r, i){
+    return '<tr><td class="rn">'+(i+1)+'</td>' + c.cols.map(function(col){
+      var v = r[col[0]];
+      var cls = (v==='OK'?'ok':v==='NOK'?'nok':'');
+      if(col[3]) return '<td class="'+cls+'"><select data-id="'+esc(r.id)+'" data-f="'+col[0]+'">' + [''].concat(col[3]).map(function(o){ return '<option'+(String(v)===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('') + '</select></td>';
+      return '<td contenteditable="true" spellcheck="false" data-id="'+esc(r.id)+'" data-f="'+col[0]+'">'+esc(v)+'</td>';
+    }).join('') + '</tr>';
+  }).join('');
+  var canWrite = (typeof canEdit === 'function') ? canEdit() : false;
+  var bg = night ? '#0f172a' : '#fff', fg = night ? '#f8fafc' : '#1e293b', grid = night ? '#334155' : '#e2e8f0', hd = night ? '#1e293b' : '#f1f5f9';
+  return '<!doctype html><html><head><meta charset="utf-8"><style>'
+    + 'body{margin:0;font:12px Inter,Segoe UI,Arial,sans-serif;background:'+bg+';color:'+fg+'}'
+    + '.bar{position:sticky;top:0;left:0;z-index:5;display:flex;gap:12px;align-items:center;padding:8px 12px;background:'+hd+';border-bottom:1px solid '+grid+'}'
+    + '.bar b{color:#ff7900}.bar span{color:#64748b}.bar button{margin-left:auto;background:#ff7900;color:#fff;border:0;border-radius:5px;padding:6px 12px;font-weight:600;cursor:pointer}'
+    + 'table{border-collapse:collapse;white-space:nowrap}th,td{border:1px solid '+grid+';padding:4px 6px;text-align:left}'
+    + 'th{position:sticky;top:41px;background:'+hd+';font-size:10px;text-transform:uppercase;letter-spacing:.5px;z-index:3}'
+    + '.rn{background:'+hd+';color:#94a3b8;text-align:center;min-width:34px;position:sticky;left:0;z-index:2}th.rn{z-index:4}'
+    + 'td[contenteditable]:focus{outline:2px solid #ff7900;outline-offset:-2px;background:'+(night?'#1e293b':'#fff7ed')+'}'
+    + 'td.ok{background:'+(night?'#143d2c':'#dcfce7')+'}td.nok{background:'+(night?'#4c1d1d':'#fee2e2')+'}'
+    + 'select{border:0;background:transparent;color:inherit;font:inherit;width:100%}.saved{position:fixed;right:14px;bottom:12px;background:#16a34a;color:#fff;padding:6px 12px;border-radius:5px;display:none}'
+    + '</style></head><body>'
+    + '<div class="bar"><b>'+esc(c.client||'')+'</b><span>'+esc(c.wh)+' · '+(c.opType==='outbound'?'Outbound':'Inbound')+' sheet · '+c.rows.length+' rows'+(canWrite?' · click a cell to edit':' · read only')+'</span>'
+    + (canWrite?'<button onclick="parent.demoSheetAddRow()">+ Add row</button>':'')+'</div>'
+    + '<table><thead>'+head+'</thead><tbody>'+body+'</tbody></table><div class="saved" id="sv">Saved</div>'
+    + '<script>var W='+(canWrite?'true':'false')+';'
+    + 'function save(el,v){if(!W)return;parent.demoSheetSave(el.getAttribute("data-id"),el.getAttribute("data-f"),v);var s=document.getElementById("sv");s.style.display="block";clearTimeout(window._t);window._t=setTimeout(function(){s.style.display="none"},1200);}'
+    + 'document.querySelectorAll("td[contenteditable]").forEach(function(td){if(!W){td.removeAttribute("contenteditable");return;}td.dataset.o=td.textContent;td.addEventListener("blur",function(){if(td.textContent!==td.dataset.o){td.dataset.o=td.textContent;save(td,td.textContent.trim());}});td.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();td.blur();}});});'
+    + 'document.querySelectorAll("select").forEach(function(s){if(!W)s.disabled=true;s.addEventListener("change",function(){save(s,s.value);});});'
+    + '<\/script></body></html>';
+}
+function demoSheetSave(id, field, value){
+  var opType = getEntryOpType();
+  var table = opType === 'outbound' ? 'outbound_shipments' : 'shipments';
+  var rid = isNaN(+id) ? id : +id;
+  var f = {}; f[field] = value;
+  if(field === 'DateDocReceived') f.Docs = value ? 'OK' : 'NOK';
+  window.__demoDB.patchRow(table, rid, f);
+  clearTimeout(window._demoRefreshT);
+  window._demoRefreshT = setTimeout(function(){ if(typeof refreshCache === 'function') refreshCache(); }, 600);
+}
+function demoSheetAddRow(){
+  var opType = getEntryOpType();
+  var wh = document.getElementById('entryWarehouse').value;
+  var client = document.getElementById('entryClient').value;
+  var today = window.__demoDB.today;
+  if(opType === 'outbound'){
+    window.__demoDB.addRow('outbound_shipments', { warehouse: wh, client: window._demoSheetKey, status: 'Active', loading_date: today, eld: today, client_ref: '', remarks: 'New order' });
+  } else {
+    window.__demoDB.addRow('shipments', { Warehouse: wh, Client: client, Status: 'Active', ETA: today, Delay: today, Docs: 'NOK', HasTms: true, TransportBy: 'Internal', TMS: 'OK', Containers: 1, Remarks: 'New entry' });
+  }
+  var frame = document.getElementById('entrySheetFrame');
+  if(frame) frame.srcdoc = demoSheetHtml(window._demoSheetKey);
+  if(typeof refreshCache === 'function') refreshCache();
 }
 
 function onEntryClientChange(){
@@ -7452,7 +7824,7 @@ function toggleEntryFullscreen(){
    ───────────────────────────────────────────────────────────────── */
 
 // Normalized-header → field ID lookup
-// Includes exact headers found in CTS Sabic inbound Excel + common variants
+// Includes exact headers found in CTS Solvane inbound Excel + common variants
 var ENTRY_XLS_MAP = (function(){
   var m={};
   [
@@ -7474,10 +7846,10 @@ var ENTRY_XLS_MAP = (function(){
     // ── References ────────────────────────────────────────────────────
     // "iTOS nbr" → "itosnbr"
     ['itosnbr','s_itosNbr'],['itosboltrics','s_itosNbr'],['itos','s_itosNbr'],
-    // "Sabic reference (450)" → "sabicreference450"
-    ['sabicreference450','s_sabicRef450'],['sabicref450','s_sabicRef450'],['clientref','s_sabicRef450'],['sabic450','s_sabicRef450'],
-    // "Sabic reference (808)" → "sabicreference808"
-    ['sabicreference808','s_sabicRef808'],['sabicref808','s_sabicRef808'],['sabic808','s_sabicRef808'],
+    // "Solvane reference (450)" → "solvanereference450"
+    ['solvanereference450','s_solvaneRef450'],['solvaneref450','s_solvaneRef450'],['clientref','s_solvaneRef450'],['solvane450','s_solvaneRef450'],
+    // "Solvane reference (808)" → "solvanereference808"
+    ['solvanereference808','s_solvaneRef808'],['solvaneref808','s_solvaneRef808'],['solvane808','s_solvaneRef808'],
 
     // ── Transport ─────────────────────────────────────────────────────
     // " Transport booked as " (has spaces) → "transportbookedas"
@@ -7847,7 +8219,7 @@ async function saveEntryForm(){
     var entry = {
       warehouse: wh, client: cl,
       itos_boltrics:     v('s_itosNbr'),
-      client_ref:        v('s_sabicRef450'),
+      client_ref:        v('s_solvaneRef450'),
       eta:               v('s_eta'),
       legacy_delay:      v('s_delay'),
       ata:               v('s_ataShip'),
@@ -7947,7 +8319,7 @@ function syncSheetToDB(){
    CT ENTRY: Excel-like interactive table
    – A/B/C column letters
    – Group expand / collapse (click group header)
-   – Frozen columns (Status + References, up to Sabic Ref 808)
+   – Frozen columns (Status + References, up to Solvane Ref 808)
    – Column resize (drag right edge of any column header)
    – Column reorder (drag non-frozen column headers)
    – Editable column headers (double-click)
@@ -7987,8 +8359,8 @@ var ENTRY_COLS = [
   {id:'s_remark',          label:'Remark',        group:'status', frozen:true,  type:'text',   w:70},
   // ── References (frozen) ─────────────────────────────────────────
   {id:'s_itosNbr',         label:'iTOS Nbr',        group:'ref', frozen:true,  type:'text', w:68},
-  {id:'s_sabicRef450',     label:'Sabic Ref (450)',  group:'ref', frozen:true,  type:'text', w:80},
-  {id:'s_sabicRef808',     label:'Sabic Ref (808)',  group:'ref', frozen:true,  type:'text', w:80},
+  {id:'s_solvaneRef450',     label:'Solvane Ref (450)',  group:'ref', frozen:true,  type:'text', w:80},
+  {id:'s_solvaneRef808',     label:'Solvane Ref (808)',  group:'ref', frozen:true,  type:'text', w:80},
   // ── Transport ───────────────────────────────────────────────────
   {id:'s_tptBookedAs',     label:'Tpt Booked As', group:'tpt', frozen:false, type:'text', w:88},
   {id:'s_tptBy',           label:'Transport By',  group:'tpt', frozen:false, type:'text', w:88},
@@ -8492,8 +8864,8 @@ function _initEntryHeaderEdit(tbl){
    ───────────────────────────────────────────────────────────────── */
 // Config keys excluded from Sync All (sheets that are not CT-managed or use a different system)
 const SYNC_ALL_SKIP = new Set([
-  'AlbemarleEuropeSea', 'KetjenBulkSea',
-  'CaterpillarOutbound',
+  'AlderanEuropeSea', 'KestrelBulkSea',
+  'TerrexOutbound',
   'Forwarding', 'ForwardingOutbound',
 ]);
 
@@ -8542,14 +8914,14 @@ function buildFullSyncList(){
   });
 
   list.sort(function(a, b){
-    if(a.configKey === 'TPL') return -1;
-    if(b.configKey === 'TPL') return 1;
-    if(a.configKey === 'YusenServaes650') return -1;
-    if(b.configKey === 'YusenServaes650') return 1;
-    if(a.configKey === 'Vinmar') return -1;
-    if(b.configKey === 'Vinmar') return 1;
-    if(a.configKey === 'Ceca') return -1;
-    if(b.configKey === 'Ceca') return 1;
+    if(a.configKey === 'TPX') return -1;
+    if(b.configKey === 'TPX') return 1;
+    if(a.configKey === 'YukonHarbourside650') return -1;
+    if(b.configKey === 'YukonHarbourside650') return 1;
+    if(a.configKey === 'Vantor') return -1;
+    if(b.configKey === 'Vantor') return 1;
+    if(a.configKey === 'Cerix') return -1;
+    if(b.configKey === 'Cerix') return 1;
     return 0;
   });
   return list;
@@ -8742,9 +9114,9 @@ function exportVolCrea() {
 // Key = 'Warehouse||Client' (must match sop.warehouse/sop.client exactly — these are the
 // same values passed to /api/sop-import when a doc is imported). Value = the Google Doc URL,
 // used only so "Refresh from Doc" knows which doc to re-import.
-// Example: 'Brasil - Kaai 1054||Nippon': 'https://docs.google.com/document/d/XXXXXXXX/edit',
+// Example: 'Riverside - Quay 1054||Nordpac': 'https://docs.google.com/document/d/XXXXXXXX/edit',
 const SOP_LINKS = {
-  'NNRC - KAAI 660||Swiss Polymers': 'https://docs.google.com/document/d/14ma272b38MrAZclmbQ4q7STC6vjBunJ5SfD1m-Y0XZ0/edit?usp=sharing',
+  'Central - Quay 660||Summit Polymers': 'https://docs.google.com/document/d/demo-sop-document/edit?usp=sharing',
 };
 
 function _sopDocId(url){
@@ -9754,7 +10126,7 @@ function openForecast(){
   html += `<th style="${thS};text-align:center;min-width:72px;color:var(--orange)">Total</th>`;
   html += '</tr></thead><tbody>';
 
-  const topWH = ['blauwhoef', 'ecowell', 'schomhoeve'];
+  const topWH = ['bluegate', 'greenfield', 'southfarm'];
   const sortWH = (a, b) => {
     const nameA = a[0].toLowerCase();
     const nameB = b[0].toLowerCase();
@@ -9859,7 +10231,7 @@ function exportForecast(){
     const rows=[];
     rows.push(['Warehouse','Client',...weeks.map(w=>'Week '+String(w)),'Total']);
     rows.push(['','', ...weeks.map(w=>wkDateRange(w)),'']);
-    const topWH = ['blauwhoef', 'ecowell', 'schomhoeve'];
+    const topWH = ['bluegate', 'greenfield', 'southfarm'];
     const sortWH = (a, b) => {
       const nameA = a[0].toLowerCase();
       const nameB = b[0].toLowerCase();
@@ -10248,7 +10620,7 @@ const src = filtered.filter(r => r._type === 'outbound');
   const whMap = new Map();
   if (typeof WH_CLIENT_MAP_OUTBOUND !== 'undefined') {
     const _rWH = getUserWarehouses();
-    const targetWhs = ['Brasil - Kaai 1054', 'Cleaning - Kaai 1054', 'Kalishoek - Kaai 1793', 'Oudendijk - Kaai 1994']
+    const targetWhs = ['Riverside - Quay 1054', 'Cleaning - Quay 1054', 'Northpoint - Quay 1793', 'Westdyke - Quay 1994']
       .filter(wh => !_rWH || _rWH.some(w => w.toLowerCase() === wh.toLowerCase()));
     targetWhs.forEach(wh => {
       if(WH_CLIENT_MAP_OUTBOUND[wh]) {
@@ -10304,7 +10676,7 @@ const src = filtered.filter(r => r._type === 'outbound');
   html += `<th style="${thS};text-align:center;min-width:72px;color:var(--orange)">Total</th>`;
   html += '</tr></thead><tbody>';
 
-  const topWH = ['blauwhoef', 'ecowell', 'schomhoeve'];
+  const topWH = ['bluegate', 'greenfield', 'southfarm'];
   const sortWH = (a, b) => {
     const nameA = a[0].toLowerCase();
     const nameB = b[0].toLowerCase();
@@ -10475,7 +10847,7 @@ function exportPlannedOrders(){
     const whMap=new Map();
     if (typeof WH_CLIENT_MAP_OUTBOUND !== 'undefined') {
       const _rWH = getUserWarehouses();
-      const targetWhs = ['Brasil - Kaai 1054', 'Cleaning - Kaai 1054', 'Kalishoek - Kaai 1793', 'Oudendijk - Kaai 1994']
+      const targetWhs = ['Riverside - Quay 1054', 'Cleaning - Quay 1054', 'Northpoint - Quay 1793', 'Westdyke - Quay 1994']
         .filter(wh => !_rWH || _rWH.some(w => w.toLowerCase() === wh.toLowerCase()));
       targetWhs.forEach(wh => {
         if(WH_CLIENT_MAP_OUTBOUND[wh]) {
@@ -10496,7 +10868,7 @@ function exportPlannedOrders(){
     const rows=[];
     rows.push(['Warehouse','Client',...weeks.map(w=>'Week '+String(w)),'Total']);
     rows.push(['','', ...weeks.map(w=>wkDateRange(w)),'']);
-    const topWH = ['blauwhoef', 'ecowell', 'schomhoeve'];
+    const topWH = ['bluegate', 'greenfield', 'southfarm'];
     const sortWH = (a, b) => {
       const nameA = a[0].toLowerCase();
       const nameB = b[0].toLowerCase();
@@ -10561,7 +10933,7 @@ function _salesDDMapCat(v) {
   var s = String(v).trim();
   if (/rederij/i.test(s)) return 'Shipping Line';
   if (/^vmt$|transport|^tpt$/i.test(s)) return 'Transport';
-  if (/\bwh\b|^vmr$|ecowell|schomhoeve|blauwhoef|warehouse/i.test(s)) return 'Warehouse';
+  if (/\bwh\b|^portside$|greenfield|southfarm|bluegate|warehouse/i.test(s)) return 'Warehouse';
   if (/^acs$/i.test(s)) return 'ACS';
   if (/customs|douane|internal customs/i.test(s)) return 'Internal Customs';
   return 'Customer';

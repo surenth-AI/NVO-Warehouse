@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warehouse Unit - Value-Added Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F0F5FA;--bg2:#fff;--bg3:#e2e8f0;--dim:#D1D5DB;--text:#1e293b;--text-dim:#475569;--accent:#ff7900;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--purple:#7c3aed;--blue:#0284c7;--mono:'DM Mono',monospace}
+body.night{--bg:#1e293b;--bg2:#0f172a;--bg3:#334155;--dim:#334155;--text:#fff;--text-dim:#cbd5e1;--accent:#ff9f43;--green:#10b981;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--blue:#38bdf8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);padding:20px 24px 40px;-webkit-font-smoothing:antialiased}
+h2{font-size:20px;font-weight:700;color:var(--accent)}
+.sub{color:var(--text-dim);font-size:12px;margin-top:4px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--bg2);border:1px solid var(--dim);border-radius:10px;padding:14px 16px;border-top:3px solid var(--accent)}
+.kpi .v{font-size:26px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim)}
+.kpi .s{font-size:11px;color:var(--text-dim);margin-top:2px}
+.row{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:18px}
+@media(max-width:900px){.row{grid-template-columns:1fr}}
+.card{background:var(--bg2);border:1px solid var(--dim);border-radius:10px;padding:14px 16px}
+.card h3{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.bars{display:flex;align-items:flex-end;gap:6px;height:150px}
+.bars .b{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.bars .stack{width:100%;display:flex;flex-direction:column-reverse;border-radius:3px 3px 0 0;overflow:hidden}
+.bars .lbl{font-size:9px;color:var(--text-dim)}
+.bars .n{font-size:9px;color:var(--text-dim);font-family:var(--mono)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--text-dim);margin-top:10px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.mix div{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--bg3)}
+.mix span:last-child{font-family:var(--mono);color:var(--text-dim)}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+select,input{background:var(--bg2);color:var(--text);border:1px solid var(--dim);border-radius:6px;padding:7px 10px;font:inherit;font-size:12px}
+input{min-width:220px}
+.count{margin-left:auto;font-size:12px;color:var(--accent);font-weight:600}
+.tw{overflow:auto;max-height:520px;border:1px solid var(--dim);border-radius:10px;background:var(--bg2)}
+table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}
+th{position:sticky;top:0;background:var(--bg3);text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.6px;padding:8px 10px;z-index:1}
+td{padding:7px 10px;border-top:1px solid var(--bg3)}
+td.m{font-family:var(--mono);font-size:11px}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.p-Planned{background:#e0f2fe;color:#0369a1}.p-In{background:#fff1e6;color:#c2410c}.p-Completed{background:#dcfce7;color:#15803d}.p-On{background:#fee2e2;color:#b91c1c}
+body.night .p-Planned{background:#0c4a6e;color:#bae6fd}body.night .p-In{background:#7c2d12;color:#fed7aa}body.night .p-Completed{background:#14532d;color:#bbf7d0}body.night .p-On{background:#7f1d1d;color:#fecaca}
+.late{color:var(--red);font-weight:600}
+.prog{width:80px;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle}
+.prog i{display:block;height:100%;background:var(--accent)}
+button.adv{background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:5px;padding:3px 8px;font-size:10px;font-weight:600;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="top">
+  <div><h2 id="ttl">Warehouse Unit</h2><div class="sub" id="subt"></div></div>
+  <div class="sub" id="asof"></div>
+</div>
+<div class="kpis" id="kpis"></div>
+<div class="row">
+  <div class="card"><h3>Orders completed per week (last 12 weeks)</h3><div class="bars" id="bars"></div><div class="legend" id="legend"></div></div>
+  <div class="card"><h3>Open work by activity</h3><div class="mix" id="mix"></div></div>
+</div>
+<div class="filters">
+  <select id="fStatus"><option value="">All statuses</option><option>Planned</option><option>In progress</option><option>On hold</option><option>Completed</option></select>
+  <select id="fAct"><option value="">All activities</option></select>
+  <select id="fClient"><option value="">All clients</option></select>
+  <input id="fQ" placeholder="Search order, lot, product, operator">
+  <span class="count" id="cnt"></span>
+</div>
+<div class="tw"><table><thead><tr><th>Order</th><th>Client</th><th>Activity</th><th>Product</th><th>Lot</th><th>Qty</th><th>Requested</th><th>Due</th><th>Status</th><th>Progress</th><th>Operator</th><th>Location</th><th></th></tr></thead><tbody id="tb"></tbody></table></div>
+
+<script>
+(function(){
+  var night = false; try { night = localStorage.getItem('ctTheme') === 'night'; } catch(e){}
+  if (night) document.body.classList.add('night');
+  var unit = new URLSearchParams(location.search).get('unit') === '2' ? 2 : 1;
+  var auth = {}; try { auth = JSON.parse(sessionStorage.getItem('ctAuthConfig') || '{}'); } catch(e){}
+  var canEdit = !!auth.edit;
+
+  var UNITS = {
+    1: { name: 'Warehouse Unit 1', site: 'Central - Quay 660 · packed polymers and chemicals',
+         clients: ['Summit Polymers','Bridgeway Polymers','Delta Chemicals','Hanvale Total','Hyolan Chemical','Meravis','Manucor','Taeyang','Trivon','Contivia'],
+         acts: [['Palletising & wrapping',30],['Relabelling',18],['Repacking damaged bags',10],['Sampling',12],['Container stuffing',20],['Stock transfer',10]],
+         unitOf: {'Palletising & wrapping':'pallets','Relabelling':'bags','Repacking damaged bags':'bags','Sampling':'samples','Container stuffing':'containers','Stock transfer':'pallets'} },
+    2: { name: 'Warehouse Unit 2', site: 'Northpoint - Quay 1793 · bulk handling and bagging',
+         clients: ['Solvane','Brakon','Borsavex','Tegrin','Axira','Hanvale Bulk','Primeco'],
+         acts: [['Bulk to 25 kg bags',32],['Big-bag filling',22],['Silo discharge',12],['Blending',8],['Sampling',10],['Container stuffing',16]],
+         unitOf: {'Bulk to 25 kg bags':'tonnes','Big-bag filling':'big bags','Silo discharge':'tonnes','Blending':'tonnes','Sampling':'samples','Container stuffing':'containers'} }
+  }[unit];
+  var PRODUCTS = ['LDPE film grade','HDPE blow moulding','PP homopolymer','PP copolymer','PVC resin','PET bottle grade','EVA copolymer','Polystyrene GPPS','ABS resin'];
+  var OPS = ['A. Peeters','L. Janssens','M. Claes','S. Wouters','K. Maes','R. De Smet','J. Willems','E. Goossens'];
+  var DAY = 86400000, d0 = new Date(), TODAY = Date.UTC(d0.getFullYear(), d0.getMonth(), d0.getDate());
+  var START = Date.UTC(2026, 0, 5);
+  var iso = function(t){ return new Date(t).toISOString().slice(0, 10); };
+  function rng(seed){ var h = 2166136261; seed = String(seed); for (var i = 0; i < seed.length; i++){ h ^= seed.charCodeAt(i); h = Math.imul(h, 16777619); }
+    var a = h >>> 0; return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  var pick = function(r, a){ return a[Math.floor(r() * a.length)]; };
+  var btw = function(r, lo, hi){ return lo + Math.floor(r() * (hi - lo + 1)); };
+  function wpick(r, pairs){ var tot = 0; pairs.forEach(function(p){ tot += p[1]; }); var x = r() * tot; for (var i = 0; i < pairs.length; i++){ if ((x -= pairs[i][1]) < 0) return pairs[i][0]; } return pairs[0][0]; }
+
+  // generate orders day by day up to today, plus a week of planned work
+  var orders = [], n = 0;
+  for (var t = START; t <= TODAY + 7 * DAY; t += DAY) {
+    var dow = new Date(t).getUTCDay(); if (dow === 0 || dow === 6) continue;
+    var rd = rng('va' + unit + '-' + t), k = btw(rd, 3, 7);
+    for (var i = 0; i < k; i++) {
+      var r = rng('va' + unit + '-' + t + '-' + i), act = wpick(r, UNITS.acts), u = UNITS.unitOf[act];
+      var qty = u === 'tonnes' ? btw(r, 20, 120) : u === 'containers' ? btw(r, 1, 6) : u === 'samples' ? btw(r, 2, 12) : u === 'big bags' ? btw(r, 20, 80) : u === 'bags' ? btw(r, 40, 400) : btw(r, 10, 60);
+      var lead = btw(r, 1, 4), due = t + lead * DAY, hours = btw(r, 3, 30);
+      var status, prog, done = '';
+      if (t > TODAY) { status = 'Planned'; prog = 0; }
+      else if (due + DAY < TODAY && r() < 0.97) { status = 'Completed'; prog = 100; done = iso(Math.min(TODAY, due + (r() < 0.86 ? -btw(r, 0, 1) : btw(r, 1, 2)) * DAY)); }
+      else if (r() < 0.12) { status = 'On hold'; prog = btw(r, 0, 60); }
+      else if (t <= TODAY - DAY || r() < 0.5) { status = 'In progress'; prog = btw(r, 10, 90); }
+      else { status = 'Planned'; prog = 0; }
+      n++;
+      orders.push({ id: 'VA' + unit + '-' + String(26000 + n), client: pick(r, UNITS.clients), act: act, product: pick(r, PRODUCTS),
+        lot: 'L' + btw(r, 1000000, 9999999), qty: qty, unit: u, req: iso(t), due: iso(due), done: done, status: status, prog: prog,
+        op: pick(r, OPS), loc: (unit === 1 ? 'Hall ' : 'Bay ') + btw(r, 1, 6) + '-' + String.fromCharCode(65 + btw(r, 0, 7)) + btw(r, 1, 30), hours: hours,
+        hold: status === 'On hold' ? pick(r, ['Awaiting client instruction', 'Labels not received', 'Quality check pending', 'Packaging material short']) : '' });
+    }
+  }
+  // local edits
+  var KEY = 'demo_va_patch_' + unit, patch = {};
+  try { patch = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){}
+  orders.forEach(function(o){ if (patch[o.id]) Object.assign(o, patch[o.id]); });
+  orders.reverse();
+
+  document.getElementById('ttl').textContent = UNITS.name + ' · Value-added services';
+  document.getElementById('subt').textContent = UNITS.site;
+  document.getElementById('asof').textContent = 'Data as of ' + iso(TODAY) + (canEdit ? '' : ' · read only');
+
+  var fill = function(id, vals){ var s = document.getElementById(id); vals.forEach(function(v){ var o = document.createElement('option'); o.textContent = v; s.appendChild(o); }); };
+  fill('fAct', UNITS.acts.map(function(a){ return a[0]; }));
+  fill('fClient', UNITS.clients.slice().sort());
+
+  var COLORS = ['#ff7900', '#0284c7', '#16a34a', '#7c3aed', '#ca8a04', '#db2777'];
+  function kpis(){
+    var open = orders.filter(function(o){ return o.status !== 'Completed'; });
+    var todayIso = iso(TODAY);
+    var doneToday = orders.filter(function(o){ return o.done === todayIso; }).length;
+    var last30 = orders.filter(function(o){ return o.status === 'Completed' && o.done >= iso(TODAY - 30 * DAY); });
+    var onTime = last30.filter(function(o){ return o.done <= o.due; }).length;
+    var overdue = open.filter(function(o){ return o.due < todayIso; }).length;
+    var hold = open.filter(function(o){ return o.status === 'On hold'; }).length;
+    var avgH = last30.length ? Math.round(last30.reduce(function(s, o){ return s + o.hours; }, 0) / last30.length) : 0;
+    var tiles = [['Open orders', open.length, overdue + ' overdue'], ['Completed today', doneToday, 'closed in WMS'],
+      ['On-time rate (30 d)', (last30.length ? (onTime / last30.length * 100).toFixed(1) : '0') + '%', onTime + ' of ' + last30.length + ' orders'],
+      ['Avg handling time', avgH + ' h', 'per order, last 30 days'], ['On hold', hold, 'waiting on client or QC']];
+    document.getElementById('kpis').innerHTML = tiles.map(function(k){ return '<div class="kpi"><div class="l">' + k[0] + '</div><div class="v">' + k[1] + '</div><div class="s">' + k[2] + '</div></div>'; }).join('');
+
+    // weekly completed, stacked by activity
+    var weeks = [];
+    for (var w = 11; w >= 0; w--) { var end = TODAY - w * 7 * DAY, st = end - 6 * DAY; weeks.push([iso(st), iso(end)]); }
+    var acts = UNITS.acts.map(function(a){ return a[0]; });
+    var data = weeks.map(function(wk){ return acts.map(function(a){ return orders.filter(function(o){ return o.act === a && o.done && o.done >= wk[0] && o.done <= wk[1]; }).length; }); });
+    var mx = Math.max.apply(null, data.map(function(d){ return d.reduce(function(s, x){ return s + x; }, 0); })) || 1;
+    document.getElementById('bars').innerHTML = data.map(function(d, i){
+      var tot = d.reduce(function(s, x){ return s + x; }, 0);
+      return '<div class="b"><div class="n">' + tot + '</div><div class="stack" style="height:' + (tot / mx * 100) + '%">' +
+        d.map(function(x, j){ return '<div title="' + acts[j] + ': ' + x + '" style="height:' + (tot ? x / tot * 100 : 0) + '%;background:' + COLORS[j] + '"></div>'; }).join('') +
+        '</div><div class="lbl">' + weeks[i][1].slice(5) + '</div></div>';
+    }).join('');
+    document.getElementById('legend').innerHTML = acts.map(function(a, j){ return '<span><i style="background:' + COLORS[j] + '"></i>' + a + '</span>'; }).join('');
+    document.getElementById('mix').innerHTML = acts.map(function(a){
+      var o = open.filter(function(x){ return x.act === a; });
+      return '<div><span>' + a + '</span><span>' + o.length + ' orders · ' + o.reduce(function(s, x){ return s + x.qty; }, 0).toLocaleString() + ' ' + UNITS.unitOf[a] + '</span></div>';
+    }).join('');
+  }
+  function cls(s){ return 'p-' + s.split(' ')[0]; }
+  function render(){
+    var fs = document.getElementById('fStatus').value, fa = document.getElementById('fAct').value, fc = document.getElementById('fClient').value, q = document.getElementById('fQ').value.toLowerCase();
+    var todayIso = iso(TODAY);
+    var rows = orders.filter(function(o){
+      if (fs && o.status !== fs) return false; if (fa && o.act !== fa) return false; if (fc && o.client !== fc) return false;
+      if (q && (o.id + ' ' + o.lot + ' ' + o.product + ' ' + o.op + ' ' + o.client).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    document.getElementById('cnt').textContent = rows.length.toLocaleString() + ' orders';
+    document.getElementById('tb').innerHTML = rows.slice(0, 400).map(function(o){
+      var late = o.status !== 'Completed' && o.due < todayIso;
+      var next = { 'Planned': 'Start', 'In progress': 'Complete', 'On hold': 'Resume' }[o.status];
+      return '<tr><td class="m">' + o.id + '</td><td>' + o.client + '</td><td>' + o.act + '</td><td>' + o.product + '</td><td class="m">' + o.lot + '</td>' +
+        '<td>' + o.qty.toLocaleString() + ' ' + o.unit + '</td><td class="m">' + o.req + '</td><td class="m' + (late ? ' late' : '') + '">' + o.due + '</td>' +
+        '<td><span class="pill ' + cls(o.status) + '" title="' + (o.hold || '') + '">' + o.status + '</span></td>' +
+        '<td><span class="prog"><i style="width:' + o.prog + '%"></i></span> <span class="m">' + o.prog + '%</span></td><td>' + o.op + '</td><td class="m">' + o.loc + '</td>' +
+        '<td>' + (canEdit && next ? '<button class="adv" data-id="' + o.id + '">' + next + '</button>' : '') + '</td></tr>';
+    }).join('');
+  }
+  document.getElementById('tb').addEventListener('click', function(e){
+    var b = e.target.closest('button.adv'); if (!b) return;
+    var o = orders.find(function(x){ return x.id === b.getAttribute('data-id'); });
+    var upd = o.status === 'In progress' ? { status: 'Completed', prog: 100, done: iso(TODAY) } : { status: 'In progress', prog: Math.max(o.prog, 10), hold: '' };
+    Object.assign(o, upd); patch[o.id] = Object.assign(patch[o.id] || {}, upd);
+    try { localStorage.setItem(KEY, JSON.stringify(patch)); } catch(err){}
+    kpis(); render();
+  });
+  ['fStatus', 'fAct', 'fClient'].forEach(function(id){ document.getElementById(id).addEventListener('change', render); });
+  document.getElementById('fQ').addEventListener('input', render);
+  kpis(); render();
+})();
+</script>
+</body>
+</html>
