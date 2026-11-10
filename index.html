@@ -2180,11 +2180,11 @@ tbody td.ct-frozen{background:#fff!important}
 
     // SOP routes
     if (cleanUrl.startsWith('/sop-lookup')) {
-      return new Response(JSON.stringify({ ok: true, found: true, id: 1, docId: MOCK_SOP.docId }), { status: 200 });
+      return new Response(JSON.stringify({ ok: true, found: true, id: 1, docId: getTable('sops')[0].docId }), { status: 200 });
     }
     if (cleanUrl.startsWith('/sop/')) {
       const sops = getTable('sops');
-      return new Response(JSON.stringify(sops[0]), { status: 200 });
+      return new Response(JSON.stringify(Object.assign({ ok: true }, sops[0])), { status: 200 });
     }
     if (cleanUrl.startsWith('/sop-task')) {
       const sops = getTable('sops');
@@ -2929,7 +2929,7 @@ const SB=v=>{
 };
 const TB=v=>String(v||'VM').trim()==='External'
   ?'<span style="color:#f59e0b;font-size:11px">External</span>'
-  :'<span style="color:#94a3b8;font-size:11px">VM</span>';
+  :'<span style="color:#94a3b8;font-size:11px">Internal</span>';
 const P=(a,b)=>b?(a/b*100).toFixed(1)+'%':'';
 const E=s=>String(s).replace(/'/g,"&#39;").replace(/"/g,"&quot;");
 const fmtD=d=>{if(!d)return'';const s=d.length>=10?d.substring(0,10):d;if(/^\d{4}-\d{2}-\d{2}$/.test(s)){if(s.startsWith('1900'))return'NA';return s.substring(8,10)+'-'+s.substring(5,7)+'-'+s.substring(0,4);}return s};
